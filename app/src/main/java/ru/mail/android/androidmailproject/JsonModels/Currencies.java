@@ -1,68 +1,43 @@
 package ru.mail.android.androidmailproject.JsonModels;
 
-import android.util.JsonReader;
+import android.icu.util.Calendar;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Franck on 21.10.2017.
- * http://www.oracle.com/technetwork/articles/java/json-1973242.html
- * http://java-help.ru/android-json/
  */
 
 public class Currencies {
+    private String base;
 
-
-
-
-    public static String getJSON(String url, int timeout) {
-        HttpURLConnection c = null;
-        try {
-            URL u = new URL(url);
-            c = (HttpURLConnection) u.openConnection();
-            c.setRequestMethod("GET");
-            c.setRequestProperty("Content-length", "0");
-            c.setUseCaches(false);
-            c.setAllowUserInteraction(false);
-            c.setConnectTimeout(timeout);
-            c.setReadTimeout(timeout);
-            c.connect();
-            int status = c.getResponseCode();
-
-            switch (status) {
-                case 200:
-                case 201:
-                    BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream()));
-                    StringBuilder sb = new StringBuilder();
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        sb.append(line+"\n");
-                    }
-                    br.close();
-                    return sb.toString();
-            }
-
-        } catch (MalformedURLException ex) {
-
-        } catch (IOException ex) {
-
-        } finally {
-            if (c != null) {
-                try {
-                    c.disconnect();
-                } catch (Exception ex) {
-
-                }
-            }
-        }
-        return null;
+    public String getBase() {
+        return base;
     }
+
+    public void setBase(String base) {
+        this.base = base;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public Map<String, Float> getRates() {
+        return rates;
+    }
+
+    public void setRates(Map<String, Float> rates) {
+        this.rates = rates;
+    }
+
+    private String date;
+    private Map<String, Float> rates;
 
 
 }
