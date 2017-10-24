@@ -26,6 +26,7 @@ import java.util.zip.Inflater;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
 import ru.mail.android.androidmailproject.adapters.MyAdapter;
+import ru.mail.android.androidmailproject.dataSingltones.CurrenciesSingletone;
 
 public class MainActivity extends AppCompatActivity {
     private TextView textView;
@@ -45,9 +46,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        recyclerViewSet(getIntent().getStringArrayExtra("ALL_CURRENCIES"));
+        recyclerViewSet(CurrenciesSingletone.getInstance().getStringCurrencies());
     }
-
-
 }
