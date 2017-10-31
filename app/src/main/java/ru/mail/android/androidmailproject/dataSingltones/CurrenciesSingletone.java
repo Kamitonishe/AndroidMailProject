@@ -1,5 +1,8 @@
 package ru.mail.android.androidmailproject.dataSingltones;
 
+import android.util.Pair;
+
+import java.util.HashMap;
 import java.util.Map;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
@@ -11,9 +14,10 @@ import ru.mail.android.androidmailproject.JsonModels.Currencies;
 
 public class CurrenciesSingletone {
     private static CurrenciesSingletone instance;
-    private Currencies currencies;
-    private String[] stringCurrencies;
+    private Map<Pair<String, String>, Currencies> currencies = new HashMap<>();
+    private String[] currenciesNames;
     private boolean isFilled;
+    private String latest = "";
 
     public static CurrenciesSingletone getInstance() {
         if (instance == null) {
@@ -26,30 +30,38 @@ public class CurrenciesSingletone {
         isFilled = false;
     }
 
-    public void setCurrencies(Currencies currencies) {
-        this.currencies = currencies;
+    public void addCurrency(Currencies currencies, boolean isLatest) {
+        if (isLatest)
+            latest = currencies.getDate();
+        if (!this.currencies.containsKey(new Pair<String, String>(currencies.getBase(), currencies.getDate())))
+            this.currencies.put(new Pair<String, String>(currencies.getBase(), currencies.getDate()), currencies);
+    }
 
-        //initialization of String Currencies for RecyclerView in MainActivity
+    public void fillCurrenciesNames(Currencies currencies) {
+        isFilled = true;
         Map<String, Float> map = currencies.getRates();
         int i = 0;
-        stringCurrencies = new String[map.size() + 1];
-        stringCurrencies[0] = currencies.getBase();
+
+        currenciesNames = new String[map.size() + 1];
+        currenciesNames[0] = currencies.getBase();
+
         for(Map.Entry entry: map.entrySet()) {
             i++;
-            stringCurrencies[i] = (String)entry.getKey();
+            currenciesNames[i] = (String)entry.getKey();
         }
-
-
-        isFilled = true;
     }
 
-    public Currencies getCurrencies() {
-        return currencies;
+    public Currencies getCurrencyInfo(String name, String date) {
+        if (date.equals("latest"))
+            return currencies.get(new Pair<String, String>(name, latest));
+        return currencies.get(new Pair<String, String>(name, date));
     }
 
+    public boolean hasInfo(String name, String date) {
+        return currencies.containsKey(new Pair<String, String>(name, date));
+    }
 
-    //returns String Currencies for RecyclerView in MainActivity
-    public String[] getStringCurrencies() {
-        return stringCurrencies;
+    public String[] getCurrenciesNames() {
+        return currenciesNames;
     }
 }

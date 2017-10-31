@@ -3,6 +3,7 @@ package ru.mail.android.androidmailproject;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -17,11 +18,12 @@ import java.net.URL;
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
 import ru.mail.android.androidmailproject.dataSingltones.CurrenciesSingletone;
 
+
 /**
  * Created by dmitrykamaldinov on 10/30/17.
  */
 
-public class JSONTask extends AsyncTask<String,String, Currencies>  {
+public class JSONTask extends AsyncTask<String, String, Currencies[]>  {
     private String date = "2000-01-03", base = "EUR";
     private final String URL_HIT = "http://api.fixer.io/";
 
@@ -31,16 +33,22 @@ public class JSONTask extends AsyncTask<String,String, Currencies>  {
     }
 
     @Override
-    protected Currencies doInBackground(String... params) {
-        date = params[0];
-        base = params[1];
-        String json = fromJSONtoString(URL_HIT + date + "?base=" + base);
-        return getCurrencies(json);
+    protected Currencies[] doInBackground(String... params) {
+        Currencies[] result = new Currencies[params.length / 2];
+        for (int i = 0; i < params.length / 2; ++i) {
+            base = params[2 * i];
+            date = params[2 * i + 1];
+            String json = fromJSONtoString(URL_HIT + date + "?base=" + base);
+            result[i] = getCurrencies(json);
+        }
+        return result;
     }
 
     @Override
-    protected void onPostExecute(Currencies result) {
+    protected void onPostExecute(Currencies[] result) {
         super.onPostExecute(result);
+        for (Currencies currencies : result)
+            CurrenciesSingletone.getInstance().addCurrency(currencies, (date.equals("latest")));
     }
 
     public String fromJSONtoString(String urlHit) {

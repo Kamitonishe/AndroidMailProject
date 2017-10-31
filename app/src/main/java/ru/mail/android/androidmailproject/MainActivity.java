@@ -46,6 +46,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        recyclerViewSet(CurrenciesSingletone.getInstance().getStringCurrencies());
+        recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNames());
+
+        startCurrencyMenuActivity("RUB");
+    }
+
+    //при выборе валюты из recyclerview
+    private void startCurrencyMenuActivity(String currency) {
+        Intent intent = new Intent(MainActivity.this, CurrencyMenuActivity.class);
+        intent.putExtra("currency_name", currency);
+        startActivity(intent);
+
+        //это не должно завершаться
+        onPause();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 }
