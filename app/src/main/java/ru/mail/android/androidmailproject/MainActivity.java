@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import java.util.zip.Inflater;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
 import ru.mail.android.androidmailproject.adapters.MyAdapter;
+import ru.mail.android.androidmailproject.adapters.RecyclerItemClickListener;
 import ru.mail.android.androidmailproject.dataSingltones.CurrenciesSingletone;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,7 +50,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNames());
 
-        startCurrencyMenuActivity("RUB");
+        recycleView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recycleView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                startCurrencyMenuActivity(((TextView)view.findViewById(R.id.textView)).getText().toString());
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+                // do whatever
+            }
+        }));
     }
 
     //при выборе валюты из recyclerview

@@ -48,6 +48,7 @@ public class GraphFragment extends Fragment {
         initGraph();
 
         Currencies cur = CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, "latest");
+        latest.setTextSize(20);
         latest.setText("\n\nКурс на " + cur.getDate() + " : " + cur.getRates().get(currencyToCompare));
     }
 
@@ -57,19 +58,25 @@ public class GraphFragment extends Fragment {
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
-        graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
+        graph.getGridLabelRenderer().setNumHorizontalLabels(4); // only 4 because of the space
         graph.getViewport().setXAxisBoundsManual(true);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String currentDate = sdf.format(new Date());
 
-        DataPoint[] points = new DataPoint[3];
-        for (int i = 0; i < 3; ++i) {
+        Calendar cal = Calendar.getInstance();
+
+        DataPoint[] points = new DataPoint[4];
+        for (int i = 0; i < 4; ++i) {
             String[] splited = currentDate.split("-");
+
             int y = new Integer(splited[0]);
             int m = new Integer(splited[1]);
             int d = new Integer(splited[2]);
-            points[i] = new DataPoint(new Date(y, m - 1, d), CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, currentDate).getRates().get(currencyToCompare));
+
+            cal.set(y, m - 1, d);
+
+            points[3 - i] = new DataPoint(cal.getTime(), CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, currentDate).getRates().get(currencyToCompare));
             currentDate = Helper.aMonthBefore(currentDate);
         }
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
@@ -79,11 +86,12 @@ public class GraphFragment extends Fragment {
         series.setDrawDataPoints(true);
         series.setDataPointsRadius(10);
         series.setThickness(10);
+        series.setDrawBackground(true);
 
         graph.addSeries(series);
 
-        graph.getViewport().setMaxX(points[0].getX());
-        graph.getViewport().setMinX(points[points.length - 1].getX());
+        graph.getViewport().setMinX(points[0].getX());
+        graph.getViewport().setMaxX(points[points.length - 1].getX());
 
     }
 }
