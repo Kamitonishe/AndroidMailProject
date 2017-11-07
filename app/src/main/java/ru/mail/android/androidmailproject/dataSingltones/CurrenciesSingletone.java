@@ -2,8 +2,10 @@ package ru.mail.android.androidmailproject.dataSingltones;
 
 import android.util.Pair;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
 
@@ -14,7 +16,7 @@ import ru.mail.android.androidmailproject.JsonModels.Currencies;
 
 public class CurrenciesSingletone {
     private static CurrenciesSingletone instance;
-    private Map<Pair<String, String>, Currencies> currencies = new HashMap<>();
+    private Map<Pair<String, String>, Currencies> currencies;
     private String[] currenciesNames;
     private boolean isFilled;
     private String latest = "";
@@ -28,6 +30,7 @@ public class CurrenciesSingletone {
 
     private CurrenciesSingletone() {
         isFilled = false;
+        currencies = new HashMap<>();
     }
 
     public void addCurrency(Currencies currencies, boolean isLatest) {
