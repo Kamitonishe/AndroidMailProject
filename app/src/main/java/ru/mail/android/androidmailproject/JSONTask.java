@@ -1,9 +1,6 @@
 package ru.mail.android.androidmailproject;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -16,7 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
-import ru.mail.android.androidmailproject.dataSingltones.CurrenciesSingletone;
+import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 
 
 /**

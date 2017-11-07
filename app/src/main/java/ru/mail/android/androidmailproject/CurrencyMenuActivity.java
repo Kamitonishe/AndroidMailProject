@@ -7,17 +7,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
 import ru.mail.android.androidmailproject.adapters.MyAdapter;
 import ru.mail.android.androidmailproject.adapters.RecyclerItemClickListener;
-import ru.mail.android.androidmailproject.dataSingltones.CurrenciesSingletone;
+import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 
 /**
  * Created by dmitrykamaldinov on 10/31/17.

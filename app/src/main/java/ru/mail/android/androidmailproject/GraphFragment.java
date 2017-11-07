@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
@@ -20,7 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
-import ru.mail.android.androidmailproject.dataSingltones.CurrenciesSingletone;
+import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 
 /**
  * Created by dmitrykamaldinov on 10/31/17.
