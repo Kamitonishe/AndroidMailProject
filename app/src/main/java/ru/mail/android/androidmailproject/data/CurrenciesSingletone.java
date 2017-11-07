@@ -15,7 +15,7 @@ import ru.mail.android.androidmailproject.JsonModels.Currencies;
 
 public class CurrenciesSingletone {
     private static CurrenciesSingletone instance;
-    private Map<Pair<String, String>, Currencies> currencies = new HashMap<>();
+    private Map<Pair<String, String>, Currencies> currencies;
     List<CurrenciesListener> listeners = new ArrayList<CurrenciesListener>();
     private String[] currenciesNames;
     private boolean isFilled;
@@ -32,6 +32,7 @@ public class CurrenciesSingletone {
 
     private CurrenciesSingletone() {
         isFilled = false;
+        currencies = new HashMap<>();
     }
 
     public void addCurrency(Currencies currencies, boolean isLatest) {
