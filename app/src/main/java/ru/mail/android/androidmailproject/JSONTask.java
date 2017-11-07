@@ -38,6 +38,7 @@ public class JSONTask extends AsyncTask<String, String, Currencies[]>  {
             String json = fromJSONtoString(URL_HIT + date + "?base=" + base);
             result[i] = getCurrencies(json);
             result[i].setDate(date);
+            result[i].getRates().put(base, (float)1);
             CurrenciesSingletone.getInstance().addCurrency(result[i], date.equals("latest"));
         }
         return result;

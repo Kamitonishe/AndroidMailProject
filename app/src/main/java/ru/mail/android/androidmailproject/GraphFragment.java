@@ -46,7 +46,10 @@ public class GraphFragment extends Fragment {
 
         initGraph();
 
-        Currencies cur = CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, "latest");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = sdf.format(new Date());
+
+        Currencies cur = CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, currentDate);
         latest.setTextSize(20);
         latest.setText("\n\nКурс на " + cur.getDate() + " : " + cur.getRates().get(currencyToCompare));
     }
