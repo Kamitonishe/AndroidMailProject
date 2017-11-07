@@ -66,8 +66,8 @@ public class GraphFragment extends Fragment {
 
         Calendar cal = Calendar.getInstance();
 
-        DataPoint[] points = new DataPoint[2];
-        for (int i = 0; i < 2; ++i) {
+        DataPoint[] points = new DataPoint[4];
+        for (int i = 0; i < 4; ++i) {
             String[] splited = currentDate.split("-");
 
             int y = new Integer(splited[0]);
@@ -76,7 +76,8 @@ public class GraphFragment extends Fragment {
 
             cal.set(y, m - 1, d);
 
-            points[1 - i] = new DataPoint(cal.getTime(), CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, currentDate).getRates().get(currencyToCompare));
+            points[3 - i] = new DataPoint(cal.getTime(),baseCurrency.equals(currencyToCompare) ? 1 :
+                    CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, currentDate).getRates().get(currencyToCompare));
             currentDate = Helper.aMonthBefore(currentDate);
         }
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);

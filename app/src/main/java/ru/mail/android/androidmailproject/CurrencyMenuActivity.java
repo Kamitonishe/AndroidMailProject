@@ -67,6 +67,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
             fTrans.replace(R.id.fragmentsFrame, graphFragment);
 
             fTrans.commit();
+
         }
     }
 
