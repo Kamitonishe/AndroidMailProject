@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.content.Intent;
+
+import java.io.BufferedReader;
 
 import ru.mail.android.androidmailproject.adapters.MyAdapter;
 import ru.mail.android.androidmailproject.adapters.RecyclerItemClickListener;
@@ -24,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         recycleView.setLayoutManager(linearLayoutManager);
         recyclerAdapter = new MyAdapter(s);
         recycleView.setAdapter(recyclerAdapter);
+
     }
 
     @Override
@@ -31,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNames());
+
+
+
 
         recycleView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recycleView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
@@ -54,6 +61,16 @@ public class MainActivity extends AppCompatActivity {
         //это не должно завершаться
         onPause();
     }
+    public void startCurrencyChangeActivity(String currency) {
+        Intent intent = new Intent(MainActivity.this, ChangeCurrencyActivity.class);
+        intent.putExtra("currency_name", currency);
+        startActivity(intent);
+
+        //это не должно завершаться
+        onPause();
+    }
+
+
 
     @Override
     protected void onPause() {

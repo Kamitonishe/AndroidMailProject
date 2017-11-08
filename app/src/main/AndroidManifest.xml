@@ -24,6 +24,8 @@
 
         <activity android:name=".CurrencyMenuActivity">
         </activity>
+        <activity android:name=".ChangeCurrencyActivity">
+        </activity>
 
 
     </application>
