@@ -60,6 +60,19 @@ public class CurrenciesSingletone {
             }
         }
     }
+
+    public void fillCurrenciesNames(ArrayList<String> names) {
+        synchronized (CurrenciesSingletone.class) {
+
+            isFilled = true;
+
+            currenciesNames = new String[names.size()];
+
+            for (int i = 0; i < names.size(); ++i)
+                currenciesNames[i] = names.get(i);
+        }
+    }
+
     public Currencies getCurrencyInfo(String name, String date) {
         synchronized (CurrenciesSingletone.class) {
             if (date.equals("latest"))

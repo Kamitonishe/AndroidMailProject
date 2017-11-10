@@ -1,5 +1,6 @@
 package ru.mail.android.androidmailproject.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import ru.mail.android.androidmailproject.CurrencyMenuActivity;
 import ru.mail.android.androidmailproject.MainActivity;
 import ru.mail.android.androidmailproject.R;
 
@@ -16,6 +18,7 @@ import ru.mail.android.androidmailproject.R;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private String[] mDataset;
+    private Context mContext;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTextView;
@@ -27,8 +30,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
-    public MyAdapter(String[] myDataset) {
+    public MyAdapter(String[] myDataset, Context context) {
         mDataset = myDataset;
+        mContext = context;
     }
 
     @Override
@@ -41,15 +45,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mTextView.setText(mDataset[position]);
-//        holder.changeBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                MainActivity mainActivity = new MainActivity();
-//                mainActivity.startCurrencyChangeActivity("f");
-//            }
-//        });
+        holder.changeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mContext instanceof MainActivity)
+                    ((MainActivity)mContext).startCurrencyMenuActivity(mDataset[position]);
+                else if (mContext instanceof CurrencyMenuActivity)
+                    ((CurrencyMenuActivity)mContext).showComparisionWithAnotherCurrency(mDataset[position]);
+            }
+        });
     }
 
     @Override
