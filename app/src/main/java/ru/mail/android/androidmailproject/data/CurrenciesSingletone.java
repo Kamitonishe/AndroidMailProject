@@ -1,6 +1,7 @@
 package ru.mail.android.androidmailproject.data;
 
-import android.util.Pair;
+
+import android.support.v4.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import ru.mail.android.androidmailproject.JsonModels.Currencies;
 public class CurrenciesSingletone {
     private static CurrenciesSingletone instance;
     private Map<Pair<String, String>, Currencies> currencies;
+    private Map<String, Integer> states;
     List<CurrenciesListener> listeners = new ArrayList<CurrenciesListener>();
     private String[] currenciesNames;
     private boolean isFilled;
@@ -33,6 +35,7 @@ public class CurrenciesSingletone {
     private CurrenciesSingletone() {
         isFilled = false;
         currencies = new HashMap<>();
+        states = new HashMap<>();
     }
 
     public void addCurrency(Currencies currencies, boolean isLatest) {
@@ -53,23 +56,27 @@ public class CurrenciesSingletone {
 
             currenciesNames = new String[map.size() + 1];
             currenciesNames[0] = currencies.getBase();
+            states.put(currenciesNames[0], 0);
 
             for (Map.Entry entry : map.entrySet()) {
                 i++;
                 currenciesNames[i] = (String) entry.getKey();
+                states.put(currenciesNames[i], 0);
             }
         }
     }
 
-    public void fillCurrenciesNames(ArrayList<String> names) {
+    public void fillCurrenciesNames(ArrayList<Pair<String, Integer>> names) {
         synchronized (CurrenciesSingletone.class) {
 
             isFilled = true;
 
             currenciesNames = new String[names.size()];
 
-            for (int i = 0; i < names.size(); ++i)
-                currenciesNames[i] = names.get(i);
+            for (int i = 0; i < names.size(); ++i) {
+                currenciesNames[i] = names.get(i).first;
+                states.put(names.get(i).first, names.get(i).second);
+            }
         }
     }
 
@@ -93,6 +100,12 @@ public class CurrenciesSingletone {
         }
     }
 
+    public Map<String, Integer> getCurrenciesStates() {
+        synchronized (CurrenciesSingletone.class) {
+            return states;
+        }
+    }
+
     public void  addListener(CurrenciesListener l) {
         synchronized (CurrenciesSingletone.class) {
             listeners.add(l);
@@ -113,4 +126,7 @@ public class CurrenciesSingletone {
         }
     }
 
+    public void changeState(String s) {
+        states.put(s, 1 - states.get(s));
+    }
 }

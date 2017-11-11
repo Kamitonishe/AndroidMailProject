@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.content.Intent;
 
 import java.io.BufferedReader;
+import java.util.Map;
 
 import ru.mail.android.androidmailproject.adapters.MyAdapter;
 import ru.mail.android.androidmailproject.adapters.RecyclerItemClickListener;
@@ -21,11 +22,11 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recycleView;
     private LinearLayoutManager linearLayoutManager;
 
-    protected void recyclerViewSet(String[] s) {
+    protected void recyclerViewSet(String[] s, Map<String, Integer> states) {
         recycleView = (RecyclerView) findViewById(R.id.recycler);
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recycleView.setLayoutManager(linearLayoutManager);
-        recyclerAdapter = new MyAdapter(s, this);
+        recyclerAdapter = new MyAdapter(s, states, this);
         recycleView.setAdapter(recyclerAdapter);
 
     }
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNames());
+        recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNames(), CurrenciesSingletone.getInstance().getCurrenciesStates());
 
 
 
@@ -76,5 +77,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNames(), CurrenciesSingletone.getInstance().getCurrenciesStates());
     }
 }

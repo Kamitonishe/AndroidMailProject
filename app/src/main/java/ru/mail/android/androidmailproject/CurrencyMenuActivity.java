@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
 import ru.mail.android.androidmailproject.adapters.MyAdapter;
@@ -34,11 +35,11 @@ public class CurrencyMenuActivity extends AppCompatActivity {
     FragmentTransaction fTrans;
 
 
-    protected void recyclerViewSet(String[] s) {
+    protected void recyclerViewSet(String[] s, Map<String, Integer> states) {
         recycleView = (RecyclerView) findViewById(R.id.recycler1);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recycleView.setLayoutManager(linearLayoutManager);
-        recyclerAdapter = new MyAdapter(s, CurrencyMenuActivity.this);
+        recyclerAdapter = new MyAdapter(s, states, CurrencyMenuActivity.this);
         recycleView.setAdapter(recyclerAdapter);
 
         /*
@@ -75,7 +76,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.currency_menu_activity);
 
-        recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNames());
+        recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNames(), CurrenciesSingletone.getInstance().getCurrenciesStates());
 
         textView = (TextView)findViewById(R.id.textView);
         baseCurrencyName = getIntent().getStringExtra("currency_name");
