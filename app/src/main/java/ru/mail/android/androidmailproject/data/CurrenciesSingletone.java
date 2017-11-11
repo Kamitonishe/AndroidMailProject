@@ -2,6 +2,7 @@ package ru.mail.android.androidmailproject.data;
 
 
 import android.support.v4.util.Pair;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
+import ru.mail.android.androidmailproject.auxiliary.StringManager;
 
 /**.
  * Singletone for storage Currencies after uploading in StartActivity
@@ -18,6 +20,7 @@ public class CurrenciesSingletone {
     private static CurrenciesSingletone instance;
     private Map<Pair<String, String>, Currencies> currencies;
     private Map<String, Integer> states;
+    private Map<String, String> latestFeaturedDate;
     List<CurrenciesListener> listeners = new ArrayList<CurrenciesListener>();
     private String[] currenciesNames;
     private boolean isFilled;
@@ -36,14 +39,19 @@ public class CurrenciesSingletone {
         isFilled = false;
         currencies = new HashMap<>();
         states = new HashMap<>();
+        latestFeaturedDate = new HashMap<>();
     }
 
     public void addCurrency(Currencies currencies, boolean isLatest) {
         synchronized (CurrenciesSingletone.class) {
             if (isLatest)
                 latest = currencies.getDate();
-            if (!this.currencies.containsKey(new Pair<String, String>(currencies.getBase(), currencies.getDate())))
+            if (!this.currencies.containsKey(new Pair<String, String>(currencies.getBase(), currencies.getDate()))) {
                 this.currencies.put(new Pair<String, String>(currencies.getBase(), currencies.getDate()), currencies);
+                if (!latestFeaturedDate.containsKey(currencies.getBase()) ||
+                        StringManager.isLaterThan(currencies.getDate(), latestFeaturedDate.get(currencies.getBase())))
+                    latestFeaturedDate.put(currencies.getBase(), currencies.getDate());
+            }
         }
     }
 
@@ -94,6 +102,12 @@ public class CurrenciesSingletone {
         }
     }
 
+    public boolean hasInfo(String name) {
+        synchronized (CurrenciesSingletone.class) {
+            return latestFeaturedDate.containsKey(name);
+        }
+    }
+
     public String[] getCurrenciesNames() {
         synchronized (CurrenciesSingletone.class) {
             return currenciesNames;
@@ -104,6 +118,10 @@ public class CurrenciesSingletone {
         synchronized (CurrenciesSingletone.class) {
             return states;
         }
+    }
+
+    public String getLatestFeaturedDate(String base) {
+        return latestFeaturedDate.get(base);
     }
 
     public void  addListener(CurrenciesListener l) {

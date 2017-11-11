@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
+import ru.mail.android.androidmailproject.auxiliary.NetworkManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 import ru.mail.android.androidmailproject.sql.DBHelper;
 
@@ -51,8 +52,21 @@ public class StartActivity extends AppCompatActivity {
         Cursor mcursor = db_read.rawQuery(count, null);
         mcursor.moveToFirst();
 
-        if (mcursor.getInt(0) == 0)
-            new JSONTaskInStart().execute("RUB", "latest");
+        if (mcursor.getInt(0) == 0) {
+            if (NetworkManager.isNetworkAvailable(getApplicationContext()))
+                new JSONTaskInStart().execute("RUB", "latest");
+            else {
+                Toast.makeText(getApplicationContext(),
+                        "Need internet connection for the first run", Toast.LENGTH_LONG).show();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                this.finish();
+                return;
+            }
+        }
         else {
             String query = "SELECT * FROM currencies_names";
             mcursor.close();

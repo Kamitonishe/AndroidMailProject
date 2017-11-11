@@ -15,10 +15,13 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
+import ru.mail.android.androidmailproject.auxiliary.NetworkManager;
+import ru.mail.android.androidmailproject.auxiliary.StringManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 
 /**
@@ -49,9 +52,19 @@ public class GraphFragment extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String currentDate = sdf.format(new Date());
 
-        Currencies cur = CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, currentDate);
         latest.setTextSize(20);
-        latest.setText("\n\nКурс на " + cur.getDate() + " : " + cur.getRates().get(currencyToCompare));
+        if (CurrenciesSingletone.getInstance().hasInfo(baseCurrency, currentDate)) {
+            Currencies cur = CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, currentDate);
+            latest.setText("\n\nКурс на " + cur.getDate() + " : " + cur.getRates().get(currencyToCompare));
+        }
+        else {
+            latest.setText("Отсутствует интернет-соединение");
+            if (CurrenciesSingletone.getInstance().hasInfo(baseCurrency)) {
+                String date = CurrenciesSingletone.getInstance().getLatestFeaturedDate(baseCurrency);
+                Currencies cur = CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, date);
+                latest.append("\n\nКурс на " + date + " : " + cur.getRates().get(currencyToCompare));
+            }
+        }
     }
 
     private void initGraph() {
@@ -68,7 +81,7 @@ public class GraphFragment extends Fragment {
 
         Calendar cal = Calendar.getInstance();
 
-        DataPoint[] points = new DataPoint[4];
+        ArrayList<DataPoint> points = new ArrayList<>();
         for (int i = 0; i < 4; ++i) {
             String[] splited = currentDate.split("-");
 
@@ -78,11 +91,13 @@ public class GraphFragment extends Fragment {
 
             cal.set(y, m - 1, d);
 
-            points[3 - i] = new DataPoint(cal.getTime(),baseCurrency.equals(currencyToCompare) ? 1 :
-                    CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, currentDate).getRates().get(currencyToCompare));
-            currentDate = Helper.aMonthBefore(currentDate);
+            if (CurrenciesSingletone.getInstance().hasInfo(baseCurrency, currentDate))
+                points.add(new DataPoint(cal.getTime(), baseCurrency.equals(currencyToCompare) ? 1 :
+                    CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, currentDate).getRates().get(currencyToCompare)));
+            currentDate = StringManager.aMonthBefore(currentDate);
         }
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
+
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points.toArray(new DataPoint[points.size()]));
 
         series.setTitle(baseCurrency + " in " + currencyToCompare);
         series.setColor(Color.RED);
@@ -93,8 +108,10 @@ public class GraphFragment extends Fragment {
 
         graph.addSeries(series);
 
-        graph.getViewport().setMinX(points[0].getX());
-        graph.getViewport().setMaxX(points[points.length - 1].getX());
+        if (points.size() > 0) {
+            graph.getViewport().setMinX(points.get(0).getX());
+            graph.getViewport().setMaxX(points.get(points.size() - 1).getX());
+        }
 
     }
 }
