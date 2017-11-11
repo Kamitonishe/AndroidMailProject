@@ -38,9 +38,10 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         recycleView = (RecyclerView) findViewById(R.id.recycler1);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recycleView.setLayoutManager(linearLayoutManager);
-        recyclerAdapter = new MyAdapter(s);
+        recyclerAdapter = new MyAdapter(s, CurrencyMenuActivity.this);
         recycleView.setAdapter(recyclerAdapter);
 
+        /*
         recycleView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recycleView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -52,6 +53,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
                 // do whatever
             }
         }));
+        */
     }
 
     public class JSONTaskForCurrencyMenu extends JSONTask {
@@ -88,7 +90,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         fTrans.commit();
     }
 
-    private void showComparisionWithAnotherCurrency(String currency) {
+    public void showComparisionWithAnotherCurrency(String currency) {
 
         currencyToCompare = currency;
 

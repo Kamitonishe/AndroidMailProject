@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         recycleView = (RecyclerView) findViewById(R.id.recycler);
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recycleView.setLayoutManager(linearLayoutManager);
-        recyclerAdapter = new MyAdapter(s);
+        recyclerAdapter = new MyAdapter(s, this);
         recycleView.setAdapter(recyclerAdapter);
 
     }
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+/*
         recycleView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recycleView, new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -50,10 +50,11 @@ public class MainActivity extends AppCompatActivity {
                 // do whatever
             }
         }));
+*/
     }
 
     //при выборе валюты из recyclerview
-    private void startCurrencyMenuActivity(String currency) {
+    public void startCurrencyMenuActivity(String currency) {
         Intent intent = new Intent(MainActivity.this, CurrencyMenuActivity.class);
         intent.putExtra("currency_name", currency);
         startActivity(intent);
