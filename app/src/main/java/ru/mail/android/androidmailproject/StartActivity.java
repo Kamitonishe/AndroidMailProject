@@ -2,6 +2,7 @@ package ru.mail.android.androidmailproject;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
+import ru.mail.android.androidmailproject.auxiliary.NetworkManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 import ru.mail.android.androidmailproject.sql.DBHelper;
 
@@ -28,10 +30,10 @@ public class StartActivity extends AppCompatActivity {
             CurrenciesSingletone.getInstance().fillCurrenciesNames(result[0]);
 
             SQLiteDatabase db_write = helper.getWritableDatabase();
-            String query = "INSERT INTO currencies_names(name) VALUES (\"" + result[0].getBase() + "\")";
+            String query = "INSERT INTO currencies_names(name, state) VALUES (\"" + result[0].getBase() + "\", 0)";
 
             for (Map.Entry entry : result[0].getRates().entrySet())
-                query += ", (\"" + (String) entry.getKey() + "\")";
+                query += ", (\"" + (String) entry.getKey() + "\", 0)";
 
             db_write.execSQL(query);
 
@@ -50,16 +52,29 @@ public class StartActivity extends AppCompatActivity {
         Cursor mcursor = db_read.rawQuery(count, null);
         mcursor.moveToFirst();
 
-        if (mcursor.getInt(0) == 0)
-            new JSONTaskInStart().execute("RUB", "latest");
+        if (mcursor.getInt(0) == 0) {
+            if (NetworkManager.isNetworkAvailable(getApplicationContext()))
+                new JSONTaskInStart().execute("RUB", "latest");
+            else {
+                Toast.makeText(getApplicationContext(),
+                        "Need internet connection for the first run", Toast.LENGTH_LONG).show();
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                this.finish();
+                return;
+            }
+        }
         else {
             String query = "SELECT * FROM currencies_names";
             mcursor.close();
             mcursor = db_read.rawQuery(query, null);
             mcursor.moveToFirst();
-            ArrayList<String> names = new ArrayList<>();
+            ArrayList<Pair<String, Integer>> names = new ArrayList<>();
             do {
-                names.add(mcursor.getString(0));
+                names.add(new Pair<>(mcursor.getString(0), mcursor.getInt(1)));
             } while (mcursor.moveToNext());
 
             CurrenciesSingletone.getInstance().fillCurrenciesNames(names);

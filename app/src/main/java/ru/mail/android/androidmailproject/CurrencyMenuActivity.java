@@ -5,15 +5,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
 import ru.mail.android.androidmailproject.adapters.MyAdapter;
-import ru.mail.android.androidmailproject.adapters.RecyclerItemClickListener;
+import ru.mail.android.androidmailproject.auxiliary.NetworkManager;
+import ru.mail.android.androidmailproject.auxiliary.StringManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 
 /**
@@ -34,11 +37,11 @@ public class CurrencyMenuActivity extends AppCompatActivity {
     FragmentTransaction fTrans;
 
 
-    protected void recyclerViewSet(String[] s) {
+    protected void recyclerViewSet(String[] s, Map<String, Integer> states) {
         recycleView = (RecyclerView) findViewById(R.id.recycler1);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recycleView.setLayoutManager(linearLayoutManager);
-        recyclerAdapter = new MyAdapter(s, CurrencyMenuActivity.this);
+        recyclerAdapter = new MyAdapter(s, states, CurrencyMenuActivity.this);
         recycleView.setAdapter(recyclerAdapter);
 
         /*
@@ -75,7 +78,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.currency_menu_activity);
 
-        recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNames());
+        recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNames(), CurrenciesSingletone.getInstance().getCurrenciesStates());
 
         textView = (TextView)findViewById(R.id.textView);
         baseCurrencyName = getIntent().getStringExtra("currency_name");
@@ -103,17 +106,23 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         fTrans.replace(R.id.fragmentsFrame, loadingFragment);
         fTrans.commit();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String currentDate = sdf.format(new Date());
+        ArrayList<String> params = new ArrayList<>();
 
-        String[] params = new String[8];
-        for (int i = 0; i < 4; ++i) {
-            params[i * 2] = baseCurrencyName;
-            params[2 * i + 1] = currentDate;
-            currentDate = Helper.aMonthBefore(currentDate);
+        if (NetworkManager.isNetworkAvailable(getApplicationContext())) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String currentDate = sdf.format(new Date());
+
+            for (int i = 0; i < 4; ++i) {
+                if (!CurrenciesSingletone.getInstance().hasInfo(baseCurrencyName, currentDate)) {
+                    params.add(baseCurrencyName);
+                    params.add(currentDate);
+                }
+                currentDate = StringManager.aMonthBefore(currentDate);
+            }
+
         }
 
-        new JSONTaskForCurrencyMenu().execute(params);
+        new JSONTaskForCurrencyMenu().execute(params.toArray(new String[params.size()]));
 
         textView.setText(baseCurrencyName + " vs " + currencyToCompare);
     }

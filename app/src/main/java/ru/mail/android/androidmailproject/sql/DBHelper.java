@@ -18,7 +18,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // создаем таблицу с полями
         db.execSQL("create table currencies_names ("
-                + "name text);");
+                + "name text, state integer);");
     }
 
     @Override

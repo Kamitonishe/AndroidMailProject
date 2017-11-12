@@ -1,6 +1,8 @@
 package ru.mail.android.androidmailproject.data;
 
-import android.util.Pair;
+
+import android.support.v4.util.Pair;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
+import ru.mail.android.androidmailproject.auxiliary.StringManager;
 
 /**.
  * Singletone for storage Currencies after uploading in StartActivity
@@ -16,6 +19,8 @@ import ru.mail.android.androidmailproject.JsonModels.Currencies;
 public class CurrenciesSingletone {
     private static CurrenciesSingletone instance;
     private Map<Pair<String, String>, Currencies> currencies;
+    private Map<String, Integer> states;
+    private Map<String, String> latestFeaturedDate;
     List<CurrenciesListener> listeners = new ArrayList<CurrenciesListener>();
     private String[] currenciesNames;
     private boolean isFilled;
@@ -33,14 +38,20 @@ public class CurrenciesSingletone {
     private CurrenciesSingletone() {
         isFilled = false;
         currencies = new HashMap<>();
+        states = new HashMap<>();
+        latestFeaturedDate = new HashMap<>();
     }
 
     public void addCurrency(Currencies currencies, boolean isLatest) {
         synchronized (CurrenciesSingletone.class) {
             if (isLatest)
                 latest = currencies.getDate();
-            if (!this.currencies.containsKey(new Pair<String, String>(currencies.getBase(), currencies.getDate())))
+            if (!this.currencies.containsKey(new Pair<String, String>(currencies.getBase(), currencies.getDate()))) {
                 this.currencies.put(new Pair<String, String>(currencies.getBase(), currencies.getDate()), currencies);
+                if (!latestFeaturedDate.containsKey(currencies.getBase()) ||
+                        StringManager.isLaterThan(currencies.getDate(), latestFeaturedDate.get(currencies.getBase())))
+                    latestFeaturedDate.put(currencies.getBase(), currencies.getDate());
+            }
         }
     }
 
@@ -53,23 +64,27 @@ public class CurrenciesSingletone {
 
             currenciesNames = new String[map.size() + 1];
             currenciesNames[0] = currencies.getBase();
+            states.put(currenciesNames[0], 0);
 
             for (Map.Entry entry : map.entrySet()) {
                 i++;
                 currenciesNames[i] = (String) entry.getKey();
+                states.put(currenciesNames[i], 0);
             }
         }
     }
 
-    public void fillCurrenciesNames(ArrayList<String> names) {
+    public void fillCurrenciesNames(ArrayList<Pair<String, Integer>> names) {
         synchronized (CurrenciesSingletone.class) {
 
             isFilled = true;
 
             currenciesNames = new String[names.size()];
 
-            for (int i = 0; i < names.size(); ++i)
-                currenciesNames[i] = names.get(i);
+            for (int i = 0; i < names.size(); ++i) {
+                currenciesNames[i] = names.get(i).first;
+                states.put(names.get(i).first, names.get(i).second);
+            }
         }
     }
 
@@ -87,10 +102,26 @@ public class CurrenciesSingletone {
         }
     }
 
+    public boolean hasInfo(String name) {
+        synchronized (CurrenciesSingletone.class) {
+            return latestFeaturedDate.containsKey(name);
+        }
+    }
+
     public String[] getCurrenciesNames() {
         synchronized (CurrenciesSingletone.class) {
             return currenciesNames;
         }
+    }
+
+    public Map<String, Integer> getCurrenciesStates() {
+        synchronized (CurrenciesSingletone.class) {
+            return states;
+        }
+    }
+
+    public String getLatestFeaturedDate(String base) {
+        return latestFeaturedDate.get(base);
     }
 
     public void  addListener(CurrenciesListener l) {
@@ -113,4 +144,7 @@ public class CurrenciesSingletone {
         }
     }
 
+    public void changeState(String s) {
+        states.put(s, 1 - states.get(s));
+    }
 }
