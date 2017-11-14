@@ -3,6 +3,7 @@ package ru.mail.android.androidmailproject.adapters;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,6 +31,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private Context mContext;
     private Map<String, Integer> states;
     private DBHelper helper;
+    private CurrencyMenuActivity currencyMenuActivity;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTextView;
@@ -50,6 +52,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         this.states = states;
     }
 
+    public void setCurrenciesActivity(CurrencyMenuActivity currenciesActivity) {
+        this.currencyMenuActivity = currenciesActivity;
+    }
+
     @Override
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
@@ -62,6 +68,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mTextView.setText(mDataset[position]);
+        holder.mTextView.setTypeface(Typeface.createFromAsset(
+               mContext.getAssets() , "fonts/libduas.ttf"));
         holder.ratingBar.setRating(states.get(mDataset[position]));
         holder.changeBtn.setOnClickListener(new View.OnClickListener() {
             @Override

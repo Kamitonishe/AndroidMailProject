@@ -1,6 +1,7 @@
 package ru.mail.android.androidmailproject;
 
 import android.app.FragmentTransaction;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -43,6 +44,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         recycleView.setLayoutManager(linearLayoutManager);
         recyclerAdapter = new MyAdapter(s, states, CurrencyMenuActivity.this);
         recycleView.setAdapter(recyclerAdapter);
+
 
         /*
         recycleView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recycleView, new RecyclerItemClickListener.OnItemClickListener() {
@@ -87,6 +89,8 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         chooseFragment = new ChooseCurrencyToCompareFragment();
 
         textView.setText(baseCurrencyName);
+        textView.setTypeface(Typeface.createFromAsset(
+                getAssets(), "fonts/libduas.ttf"));
 
         fTrans = getFragmentManager().beginTransaction();
         fTrans.add(R.id.fragmentsFrame, chooseFragment);
