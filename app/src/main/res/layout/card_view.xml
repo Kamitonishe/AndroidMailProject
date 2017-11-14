@@ -11,6 +11,7 @@
     cardview:cardBackgroundColor="@android:color/white"
     cardview:cardCornerRadius="14dp"
     cardview:cardElevation="4dp"
+    style="@style/MyCardViewStyle"
     >
 
     <LinearLayout
