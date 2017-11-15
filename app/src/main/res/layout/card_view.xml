@@ -8,7 +8,6 @@
     android:id="@+id/card"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
-    cardview:cardBackgroundColor="@android:color/white"
     cardview:cardCornerRadius="14dp"
     cardview:cardElevation="4dp"
     style="@style/MyCardViewStyle"
@@ -26,6 +25,7 @@
             android:layout_marginLeft="10dp"
             android:id="@+id/textView"
             android:text="TEST"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="25sp"
             />
         <RatingBar
@@ -36,7 +36,8 @@
             android:layout_marginTop="5dp"
             android:layout_height="wrap_content"
             android:numStars="1"
-            android:stepSize="1"/>
+            android:stepSize="1"
+            />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
