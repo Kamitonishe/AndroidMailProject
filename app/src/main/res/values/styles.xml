@@ -14,6 +14,6 @@
         <item name="contentPaddingTop">12dp</item>
         <item name="contentPaddingLeft">16dp</item>
         <item name="contentPaddingRight">16dp</item>
-        <item name="cardBackgroundColor">@color/colorAccent</item>
+        <item name="cardBackgroundColor">@color/ping</item>
     </style>
 </resources>

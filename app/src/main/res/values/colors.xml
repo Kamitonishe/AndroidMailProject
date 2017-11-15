@@ -9,4 +9,5 @@
     <color name="compoundRed">#FF0000</color>
     <color name="compoundGreenLight">#40FF40</color>
     <color name="compoundGreenDark">#54CC14</color>
+    <color name="ping">#fedaf3</color>
 </resources>
