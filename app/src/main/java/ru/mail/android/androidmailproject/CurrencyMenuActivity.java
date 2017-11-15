@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.Map;
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
 import ru.mail.android.androidmailproject.adapters.MyAdapter;
 import ru.mail.android.androidmailproject.auxiliary.NetworkManager;
-import ru.mail.android.androidmailproject.auxiliary.StringManager;
+import ru.mail.android.androidmailproject.auxiliary.DateManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 
 /**
@@ -121,7 +120,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
                     params.add(baseCurrencyName);
                     params.add(currentDate);
                 }
-                currentDate = StringManager.aMonthBefore(currentDate);
+                currentDate = DateManager.aMonthBefore(currentDate);
             }
 
         }

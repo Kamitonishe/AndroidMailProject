@@ -2,7 +2,6 @@ package ru.mail.android.androidmailproject.data;
 
 
 import android.support.v4.util.Pair;
-import android.support.v7.widget.ThemedSpinnerAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
-import ru.mail.android.androidmailproject.auxiliary.StringManager;
+import ru.mail.android.androidmailproject.auxiliary.DateManager;
 
 /**.
  * Singletone for storage Currencies after uploading in StartActivity
@@ -21,7 +20,7 @@ public class CurrenciesSingletone {
     private Map<Pair<String, String>, Currencies> currencies;
     private Map<String, Integer> states;
     private Map<String, String> latestFeaturedDate;
-    List<CurrenciesListener> listeners = new ArrayList<CurrenciesListener>();
+    List<CurrenciesListener> listeners;
     private String[] currenciesNames;
     private boolean isFilled;
     private String latest = "";
@@ -40,6 +39,7 @@ public class CurrenciesSingletone {
         currencies = new HashMap<>();
         states = new HashMap<>();
         latestFeaturedDate = new HashMap<>();
+        listeners =  new ArrayList<CurrenciesListener>();;
     }
 
     public void addCurrency(Currencies currencies, boolean isLatest) {
@@ -49,7 +49,7 @@ public class CurrenciesSingletone {
             if (!this.currencies.containsKey(new Pair<String, String>(currencies.getBase(), currencies.getDate()))) {
                 this.currencies.put(new Pair<String, String>(currencies.getBase(), currencies.getDate()), currencies);
                 if (!latestFeaturedDate.containsKey(currencies.getBase()) ||
-                        StringManager.isLaterThan(currencies.getDate(), latestFeaturedDate.get(currencies.getBase())))
+                        DateManager.isLaterThan(currencies.getDate(), latestFeaturedDate.get(currencies.getBase())))
                     latestFeaturedDate.put(currencies.getBase(), currencies.getDate());
             }
         }

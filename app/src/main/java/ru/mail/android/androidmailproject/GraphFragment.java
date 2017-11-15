@@ -20,8 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
-import ru.mail.android.androidmailproject.auxiliary.NetworkManager;
-import ru.mail.android.androidmailproject.auxiliary.StringManager;
+import ru.mail.android.androidmailproject.auxiliary.DateManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 
 /**
@@ -94,7 +93,7 @@ public class GraphFragment extends Fragment {
             if (CurrenciesSingletone.getInstance().hasInfo(baseCurrency, currentDate))
                 points.add(new DataPoint(cal.getTime(), baseCurrency.equals(currencyToCompare) ? 1 :
                     CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, currentDate).getRates().get(currencyToCompare)));
-            currentDate = StringManager.aMonthBefore(currentDate);
+            currentDate = DateManager.aMonthBefore(currentDate);
         }
 
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points.toArray(new DataPoint[points.size()]));

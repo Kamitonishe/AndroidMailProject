@@ -52,9 +52,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         this.states = states;
     }
 
-    public void setCurrenciesActivity(CurrencyMenuActivity currenciesActivity) {
-        this.currencyMenuActivity = currenciesActivity;
-    }
 
     @Override
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
