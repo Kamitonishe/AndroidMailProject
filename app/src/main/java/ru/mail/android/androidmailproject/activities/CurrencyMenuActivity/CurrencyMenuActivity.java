@@ -1,4 +1,4 @@
-package ru.mail.android.androidmailproject;
+package ru.mail.android.androidmailproject.activities.CurrencyMenuActivity;
 
 import android.app.FragmentTransaction;
 import android.graphics.Typeface;
@@ -6,18 +6,19 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
+import ru.mail.android.androidmailproject.auxiliary.JSONTask;
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
+import ru.mail.android.androidmailproject.R;
 import ru.mail.android.androidmailproject.adapters.MyAdapter;
 import ru.mail.android.androidmailproject.auxiliary.NetworkManager;
-import ru.mail.android.androidmailproject.auxiliary.StringManager;
+import ru.mail.android.androidmailproject.auxiliary.DateManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 
 /**
@@ -38,27 +39,12 @@ public class CurrencyMenuActivity extends AppCompatActivity {
     FragmentTransaction fTrans;
 
 
-    protected void recyclerViewSet(String[] s, Map<String, Integer> states) {
+    protected void recyclerViewSet(Pair<String, Integer>[] namesAndStates) {
         recycleView = (RecyclerView) findViewById(R.id.recycler1);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recycleView.setLayoutManager(linearLayoutManager);
-        recyclerAdapter = new MyAdapter(s, states, CurrencyMenuActivity.this);
+        recyclerAdapter = new MyAdapter(namesAndStates, CurrencyMenuActivity.this);
         recycleView.setAdapter(recyclerAdapter);
-
-
-        /*
-        recycleView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recycleView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                showComparisionWithAnotherCurrency(((TextView)view.findViewById(R.id.textView)).getText().toString());
-            }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-                // do whatever
-            }
-        }));
-        */
     }
 
     public class JSONTaskForCurrencyMenu extends JSONTask {
@@ -66,12 +52,12 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Currencies[] result) {
             super.onPostExecute(result);
+            if (!isCancelled()) {
+                fTrans = getFragmentManager().beginTransaction();
+                fTrans.replace(R.id.fragmentsFrame, graphFragment);
 
-            fTrans = getFragmentManager().beginTransaction();
-            fTrans.replace(R.id.fragmentsFrame, graphFragment);
-
-            fTrans.commit();
-
+                fTrans.commit();
+            }
         }
     }
 
@@ -80,7 +66,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.currency_menu_activity);
 
-        recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNames(), CurrenciesSingletone.getInstance().getCurrenciesStates());
+        recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNamesAndStates());
 
         textView = (TextView)findViewById(R.id.textView);
         baseCurrencyName = getIntent().getStringExtra("currency_name");
@@ -117,11 +103,11 @@ public class CurrencyMenuActivity extends AppCompatActivity {
             String currentDate = sdf.format(new Date());
 
             for (int i = 0; i < 4; ++i) {
-                if (!CurrenciesSingletone.getInstance().hasInfo(baseCurrencyName, currentDate)) {
+                if (!CurrenciesSingletone.getInstance().hasInfo(baseCurrencyName, currentDate, currencyToCompare)) {
                     params.add(baseCurrencyName);
                     params.add(currentDate);
                 }
-                currentDate = StringManager.aMonthBefore(currentDate);
+                currentDate = DateManager.aMonthBefore(currentDate);
             }
 
         }

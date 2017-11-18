@@ -1,4 +1,4 @@
-package ru.mail.android.androidmailproject;
+package ru.mail.android.androidmailproject.auxiliary;
 
 import android.os.AsyncTask;
 
@@ -37,7 +37,8 @@ public class JSONTask extends AsyncTask<String, String, Currencies[]>  {
             date = params[2 * i + 1];
             String json = fromJSONtoString(URL_HIT + date + "?base=" + base);
             result[i] = getCurrencies(json);
-            result[i].setDate(date);
+            if (!date.equals("latest"))
+                result[i].setDate(date);
             result[i].getRates().put(base, (float)1);
             CurrenciesSingletone.getInstance().addCurrency(result[i], date.equals("latest"));
         }

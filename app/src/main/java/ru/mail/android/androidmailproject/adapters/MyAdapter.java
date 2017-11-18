@@ -1,10 +1,10 @@
 package ru.mail.android.androidmailproject.adapters;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,13 +14,15 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import ru.mail.android.androidmailproject.CurrencyMenuActivity;
-import ru.mail.android.androidmailproject.MainActivity;
+import ru.mail.android.androidmailproject.activities.CurrencyMenuActivity.CurrencyMenuActivity;
+import ru.mail.android.androidmailproject.activities.MainActivity.MainActivity;
 import ru.mail.android.androidmailproject.R;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 import ru.mail.android.androidmailproject.sql.DBHelper;
+
 
 /**
  * Created by Franck on 23.10.2017.
@@ -45,15 +47,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
-    public MyAdapter(String[] myDataset, Map<String, Integer> states, Context context) {
-        mDataset = myDataset;
+    public MyAdapter(Pair<String, Integer>[] currencies, Context context) {
+        int i = 0;
         mContext = context;
         helper = new DBHelper(context);
-        this.states = states;
-    }
-
-    public void setCurrenciesActivity(CurrencyMenuActivity currenciesActivity) {
-        this.currencyMenuActivity = currenciesActivity;
+        mDataset = new String[currencies.length];
+        states = new HashMap<>();
+        for (Pair<String, Integer> nameAndState : currencies) {
+            mDataset[i++] = nameAndState.first;
+            this.states.put(nameAndState.first, nameAndState.second);
+        }
     }
 
     @Override
@@ -90,7 +93,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                     SQLiteDatabase db = helper.getWritableDatabase();
 
-                    db.execSQL("UPDATE currencies_names SET state = " + states.get(mDataset[position]) +
+                    db.execSQL("UPDATE currencies_names SET state = " + (1 - states.get(mDataset[position])) +
                             " WHERE name = \"" + mDataset[position] +"\"");
                 }
                 return true;

@@ -4,7 +4,7 @@ package ru.mail.android.androidmailproject.auxiliary;
  * Created by dmitrykamaldinov on 10/31/17.
  */
 
-public class StringManager {
+public class DateManager {
     public static String aMonthBefore(String date) {
         String[] splited = date.split("-");
         Integer a = Integer.valueOf(splited[1]);

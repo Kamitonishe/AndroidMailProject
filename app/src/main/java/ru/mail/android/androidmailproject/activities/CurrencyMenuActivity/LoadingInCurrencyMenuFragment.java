@@ -1,13 +1,12 @@
-package ru.mail.android.androidmailproject;
+package ru.mail.android.androidmailproject.activities.CurrencyMenuActivity;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.jjoe64.graphview.GraphView;
+import ru.mail.android.androidmailproject.R;
 
 /**
  * Created by dmitrykamaldinov on 10/31/17.

@@ -16,7 +16,7 @@
     
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="270dp"
         android:id="@+id/fragmentsFrame"
         android:background="@drawable/color_gray">
     </FrameLayout>
@@ -26,7 +26,7 @@
         android:orientation="vertical">
         <Button
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="15dp"
             android:layout_marginTop="0dp"
             android:clickable="false"
             android:background="@color/compoundBroun"
@@ -39,7 +39,7 @@
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/recycler1"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="300dp"
                 android:clipToPadding="false"
                 android:padding="8dp"
                 android:background="@drawable/color_gray">
