@@ -1,4 +1,4 @@
-package ru.mail.android.androidmailproject.activities.StartActivity;
+package ru.mail.android.androidmailproject.activities.startActivity;
 
 import android.app.FragmentTransaction;
 import android.database.Cursor;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 import ru.mail.android.androidmailproject.auxiliary.JSONTask;
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
-import ru.mail.android.androidmailproject.activities.MainActivity.MainActivity;
+import ru.mail.android.androidmailproject.activities.mainActivity.MainActivity;
 import ru.mail.android.androidmailproject.R;
 import ru.mail.android.androidmailproject.auxiliary.NetworkManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;

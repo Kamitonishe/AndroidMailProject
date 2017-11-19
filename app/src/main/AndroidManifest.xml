@@ -13,17 +13,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".activities$MainActivity.MainActivity">
+        <activity android:name=".activities.mainActivity.MainActivity">
         </activity>
 
-        <activity android:name=".activities$StartActivity.StartActivity">
+        <activity android:name=".activities.startActivity.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities$CurrencyMenuActivity.CurrencyMenuActivity">
+        <activity android:name=".activities.currencyMenuActivity.CurrencyMenuActivity">
         </activity>
 
 

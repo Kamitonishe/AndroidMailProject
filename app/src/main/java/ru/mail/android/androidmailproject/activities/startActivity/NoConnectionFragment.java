@@ -1,4 +1,4 @@
-package ru.mail.android.androidmailproject.activities.StartActivity;
+package ru.mail.android.androidmailproject.activities.startActivity;
 
 import android.app.Fragment;
 import android.os.Bundle;

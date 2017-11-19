@@ -1,4 +1,4 @@
-package ru.mail.android.androidmailproject.activities.CurrencyMenuActivity;
+package ru.mail.android.androidmailproject.activities.currencyMenuActivity;
 
 import android.app.Fragment;
 import android.os.Bundle;

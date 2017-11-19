@@ -1,4 +1,4 @@
-package ru.mail.android.androidmailproject.activities.CurrencyMenuActivity;
+package ru.mail.android.androidmailproject.activities.currencyMenuActivity;
 
 import android.app.FragmentTransaction;
 import android.graphics.Typeface;
@@ -27,7 +27,6 @@ import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 
 public class CurrencyMenuActivity extends AppCompatActivity {
     private TextView textView;
-    private MyAdapter recyclerAdapter;
     private RecyclerView recycleView;
 
     private String baseCurrencyName;
@@ -38,12 +37,11 @@ public class CurrencyMenuActivity extends AppCompatActivity {
     private ChooseCurrencyToCompareFragment chooseFragment;
     FragmentTransaction fTrans;
 
-
     protected void recyclerViewSet(Pair<String, Integer>[] namesAndStates) {
         recycleView = (RecyclerView) findViewById(R.id.recycler1);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recycleView.setLayoutManager(linearLayoutManager);
-        recyclerAdapter = new MyAdapter(namesAndStates, CurrencyMenuActivity.this);
+        MyAdapter recyclerAdapter = new MyAdapter(namesAndStates, CurrencyMenuActivity.this);
         recycleView.setAdapter(recyclerAdapter);
     }
 
