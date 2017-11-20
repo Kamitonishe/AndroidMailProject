@@ -1,4 +1,4 @@
-package ru.mail.android.androidmailproject;
+package ru.mail.android.androidmailproject.activities.currencyMenuActivity;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import ru.mail.android.androidmailproject.R;
 
 /**
  * Created by dmitrykamaldinov on 10/31/17.
