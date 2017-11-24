@@ -34,7 +34,7 @@ public class StartActivity extends AppCompatActivity {
 
         protected void onPostExecute(Currencies[] result) {
             super.onPostExecute(result);
-            CurrenciesSingletone.getInstance().fillCurrenciesNames(result[0]);
+            CurrenciesSingletone.getInstance().fillCurrencies(result[0]);
 
             SQLiteDatabase db_write = helper.getWritableDatabase();
             String query = "INSERT INTO currencies_names(name, state) VALUES (\"" + result[0].getBase() + "\", 0)";
@@ -77,7 +77,7 @@ public class StartActivity extends AppCompatActivity {
                 names.add(new Pair<>(mcursor.getString(0), mcursor.getInt(1)));
             } while (mcursor.moveToNext());
 
-            CurrenciesSingletone.getInstance().fillCurrenciesNames(names);
+            CurrenciesSingletone.getInstance().fillCurrencies(names);
             callMainActivity();
         }
     }

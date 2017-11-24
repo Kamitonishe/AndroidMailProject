@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:src="@drawable/splash_screen_background"
-        android:layout_weight="0.94" />
+        android:layout_weight="0.57" />
 
     <FrameLayout
         android:id="@+id/fragmentsFrameStart"

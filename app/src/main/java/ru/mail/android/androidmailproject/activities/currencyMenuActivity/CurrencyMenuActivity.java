@@ -37,11 +37,11 @@ public class CurrencyMenuActivity extends AppCompatActivity {
     private ChooseCurrencyToCompareFragment chooseFragment;
     FragmentTransaction fTrans;
 
-    protected void recyclerViewSet(Pair<String, Integer>[] namesAndStates) {
+    protected void recyclerViewSet() {
         recycleView = (RecyclerView) findViewById(R.id.recycler1);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recycleView.setLayoutManager(linearLayoutManager);
-        MyAdapter recyclerAdapter = new MyAdapter(namesAndStates, CurrencyMenuActivity.this);
+        MyAdapter recyclerAdapter = new MyAdapter(CurrencyMenuActivity.this);
         recycleView.setAdapter(recyclerAdapter);
     }
 
@@ -64,7 +64,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.currency_menu_activity);
 
-        recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNamesAndStates());
+        recyclerViewSet();
 
         textView = (TextView)findViewById(R.id.textView);
         baseCurrencyName = getIntent().getStringExtra("currency_name");

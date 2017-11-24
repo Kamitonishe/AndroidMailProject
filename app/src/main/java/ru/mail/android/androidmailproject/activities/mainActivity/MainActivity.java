@@ -15,11 +15,11 @@ import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recycleView;
 
-    protected void recyclerViewSet(Pair<String, Integer>[] namesAndStates) {
+    protected void recyclerViewSet() {
         recycleView = (RecyclerView) findViewById(R.id.recycler);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recycleView.setLayoutManager(linearLayoutManager);
-        MyAdapter recyclerAdapter = new MyAdapter(namesAndStates, this);
+        MyAdapter recyclerAdapter = new MyAdapter(this);
         recycleView.setAdapter(recyclerAdapter);
 
     }
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNamesAndStates());
+        recyclerViewSet();
     }
 
     public void startCurrencyMenuActivity(String currency) {
@@ -48,6 +48,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        recyclerViewSet(CurrenciesSingletone.getInstance().getCurrenciesNamesAndStates());
+        recyclerViewSet();
     }
 }
