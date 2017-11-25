@@ -59,6 +59,8 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         }
     }
 
+    JSONTaskForCurrencyMenu task;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,24 +78,14 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         textView.setTypeface(Typeface.createFromAsset(
                 getAssets(), "fonts/libduas.ttf"));
 
+        task = new JSONTaskForCurrencyMenu();
+
         fTrans = getFragmentManager().beginTransaction();
         fTrans.add(R.id.fragmentsFrame, chooseFragment);
         fTrans.commit();
     }
 
-    public void showComparisionWithAnotherCurrency(String currency) {
-
-        currencyToCompare = currency;
-
-        Bundle toGraphFragment = new Bundle();
-        toGraphFragment.putString("base_currency", baseCurrencyName);
-        toGraphFragment.putString("currency_to_compare", currencyToCompare);
-        graphFragment.setArguments(toGraphFragment);
-
-        fTrans = getFragmentManager().beginTransaction();
-        fTrans.replace(R.id.fragmentsFrame, loadingFragment);
-        fTrans.commit();
-
+    private void loadInformation() {
         ArrayList<String> params = new ArrayList<>();
 
         if (NetworkManager.isNetworkAvailable(getApplicationContext())) {
@@ -110,8 +102,38 @@ public class CurrencyMenuActivity extends AppCompatActivity {
 
         }
 
-        new JSONTaskForCurrencyMenu().execute(params.toArray(new String[params.size()]));
+        task = new JSONTaskForCurrencyMenu();
+        task.execute(params.toArray(new String[params.size()]));
+    }
+
+    public void showComparisionWithAnotherCurrency(String currency) {
+
+        currencyToCompare = currency;
+
+        Bundle toGraphFragment = new Bundle();
+        toGraphFragment.putString("base_currency", baseCurrencyName);
+        toGraphFragment.putString("currency_to_compare", currencyToCompare);
+        graphFragment.setArguments(toGraphFragment);
+
+        fTrans = getFragmentManager().beginTransaction();
+        fTrans.replace(R.id.fragmentsFrame, loadingFragment);
+        fTrans.commit();
 
         textView.setText(baseCurrencyName + " vs " + currencyToCompare);
+
+        loadInformation();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        task.cancel(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (task.isCancelled())
+            loadInformation();
     }
 }

@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import ru.mail.android.androidmailproject.auxiliary.JSONTask;
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
@@ -26,9 +28,11 @@ import ru.mail.android.androidmailproject.sql.DBHelper;
 
 public class StartActivity extends AppCompatActivity {
     private DBHelper helper;
+    private ExecutorService service;
 
     private NoConnectionFragment noConnectionFragment;
     private ProgressBarFragment progressBarFragment;
+
 
     public class JSONTaskInStart extends JSONTask {
 
@@ -36,13 +40,20 @@ public class StartActivity extends AppCompatActivity {
             super.onPostExecute(result);
             CurrenciesSingletone.getInstance().fillCurrencies(result[0]);
 
-            SQLiteDatabase db_write = helper.getWritableDatabase();
             String query = "INSERT INTO currencies_names(name, state) VALUES (\"" + result[0].getBase() + "\", 0)";
 
             for (Map.Entry entry : result[0].getRates().entrySet())
                 query += ", (\"" + (String) entry.getKey() + "\", 0)";
 
-            db_write.execSQL(query);
+            final String query_ = query;
+
+            service.submit(new Runnable() {
+                @Override
+                public void run() {
+                    SQLiteDatabase db_write = helper.getWritableDatabase();
+                    db_write.execSQL(query_);
+                }
+            });
 
             callMainActivity();
         }
@@ -87,6 +98,7 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         helper = new DBHelper(this);
+        service = Executors.newCachedThreadPool();
         progressBarFragment = new ProgressBarFragment();
         noConnectionFragment = new NoConnectionFragment();
 
