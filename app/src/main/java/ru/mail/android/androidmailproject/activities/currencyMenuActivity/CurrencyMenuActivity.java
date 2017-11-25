@@ -113,7 +113,11 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         Bundle toGraphFragment = new Bundle();
         toGraphFragment.putString("base_currency", baseCurrencyName);
         toGraphFragment.putString("currency_to_compare", currencyToCompare);
-        graphFragment.setArguments(toGraphFragment);
+
+        if (graphFragment.getArguments() == null)
+            graphFragment.setArguments(toGraphFragment);
+        else
+            graphFragment.getArguments().putAll(toGraphFragment);
 
         fTrans = getFragmentManager().beginTransaction();
         fTrans.replace(R.id.fragmentsFrame, loadingFragment);
