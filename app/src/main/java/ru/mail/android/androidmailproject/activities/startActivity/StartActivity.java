@@ -60,37 +60,41 @@ public class StartActivity extends AppCompatActivity {
     }
 
     void tryToCallMainActivity() {
-        SQLiteDatabase db_read = helper.getReadableDatabase();
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
+                String count = "SELECT count(*) FROM currencies_names";
+                SQLiteDatabase db_read = helper.getReadableDatabase();
+                Cursor mcursor = db_read.rawQuery(count, null);
+                mcursor.moveToFirst();
 
-        String count = "SELECT count(*) FROM currencies_names";
-        Cursor mcursor = db_read.rawQuery(count, null);
-        mcursor.moveToFirst();
+                if (mcursor.getInt(0) == 0) {
+                    if (NetworkManager.isNetworkAvailable(getApplicationContext()))
+                        new JSONTaskInStart().execute("RUB", "latest");
+                    else {
+                        Toast.makeText(getApplicationContext(),
+                                "Need internet connection for the first run", Toast.LENGTH_LONG).show();
 
-        if (mcursor.getInt(0) == 0) {
-            if (NetworkManager.isNetworkAvailable(getApplicationContext()))
-                new JSONTaskInStart().execute("RUB", "latest");
-            else {
-                Toast.makeText(getApplicationContext(),
-                        "Need internet connection for the first run", Toast.LENGTH_LONG).show();
+                        FragmentTransaction ftrans = getFragmentManager().beginTransaction();
+                        ftrans.replace(R.id.fragmentsFrameStart, noConnectionFragment);
+                        ftrans.commit();
+                    }
+                }
+                else {
+                    String query = "SELECT * FROM currencies_names";
+                    mcursor.close();
+                    mcursor = db_read.rawQuery(query, null);
+                    mcursor.moveToFirst();
+                    ArrayList<Pair<String, Integer>> names = new ArrayList<>();
+                    do {
+                        names.add(new Pair<>(mcursor.getString(0), mcursor.getInt(1)));
+                    } while (mcursor.moveToNext());
 
-                FragmentTransaction ftrans = getFragmentManager().beginTransaction();
-                ftrans.replace(R.id.fragmentsFrameStart, noConnectionFragment);
-                ftrans.commit();
+                    CurrenciesSingletone.getInstance().fillCurrencies(names);
+                    callMainActivity();
+                }
             }
-        }
-        else {
-            String query = "SELECT * FROM currencies_names";
-            mcursor.close();
-            mcursor = db_read.rawQuery(query, null);
-            mcursor.moveToFirst();
-            ArrayList<Pair<String, Integer>> names = new ArrayList<>();
-            do {
-                names.add(new Pair<>(mcursor.getString(0), mcursor.getInt(1)));
-            } while (mcursor.moveToNext());
-
-            CurrenciesSingletone.getInstance().fillCurrencies(names);
-            callMainActivity();
-        }
+        });
     }
 
     @Override

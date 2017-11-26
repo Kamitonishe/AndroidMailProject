@@ -7,15 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.Series;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -71,8 +75,9 @@ public class GraphFragment extends Fragment {
 
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
-        graph.getGridLabelRenderer().setNumHorizontalLabels(4); // only 4 because of the space
+
+        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity(), new SimpleDateFormat("dd.MM.yy")));
+        graph.getGridLabelRenderer().setNumHorizontalLabels(4);
         graph.getViewport().setXAxisBoundsManual(true);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -91,7 +96,7 @@ public class GraphFragment extends Fragment {
             cal.set(y, m - 1, d);
 
             if (CurrenciesSingletone.getInstance().hasInfo(baseCurrency, currentDate, currencyToCompare))
-                points.add(new DataPoint(cal.getTime(), baseCurrency.equals(currencyToCompare) ? 1 :
+                points.add(new DataPoint(cal.getTime().getTime(), baseCurrency.equals(currencyToCompare) ? 1 :
                     CurrenciesSingletone.getInstance().getCurrencyRate(baseCurrency, currentDate, currencyToCompare)));
             currentDate = DateManager.aMonthBefore(currentDate);
         }
@@ -104,6 +109,8 @@ public class GraphFragment extends Fragment {
         series.setDataPointsRadius(10);
         series.setThickness(10);
         series.setDrawBackground(true);
+        series.setAnimated(true);
+
 
         graph.addSeries(series);
 
@@ -111,6 +118,5 @@ public class GraphFragment extends Fragment {
             graph.getViewport().setMinX(points.get(0).getX());
             graph.getViewport().setMaxX(points.get(points.size() - 1).getX());
         }
-
     }
 }

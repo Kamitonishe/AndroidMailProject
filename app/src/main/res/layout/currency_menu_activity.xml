@@ -12,7 +12,16 @@
         android:textSize="20dp"
         android:gravity="center"
         android:id="@+id/textView"
-        android:background="@color/cardview_light_background"/>
+        android:background="@color/cardview_light_background"
+        android:onClick="toggleContents"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:layout_alignParentRight="true"
+        android:id="@+id/textViewHelp"
+        android:gravity="center"
+        />
     
     <FrameLayout
         android:layout_width="match_parent"
@@ -46,5 +55,11 @@
 
             </android.support.v7.widget.RecyclerView>
         </FrameLayout>
-        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:navigationIcon="@mipmap/icon" />
+
     </LinearLayout>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="ru.mail.android.androidmailproject">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -23,7 +24,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.currencyMenuActivity.CurrencyMenuActivity">
+        <activity android:name=".activities.currencyMenuActivity.CurrencyMenuActivity"
+            android:parentActivityName=".activities.mainActivity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.mainActivity.MainActivity"/>
         </activity>
 
 
