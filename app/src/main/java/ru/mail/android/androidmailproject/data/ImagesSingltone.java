@@ -2,29 +2,35 @@ package ru.mail.android.androidmailproject.data;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.util.LruCache;
-import android.util.Pair;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.concurrent.Executors;
 
+import ru.mail.android.androidmailproject.R;
+import ru.mail.android.androidmailproject.activities.startActivity.StartActivity;
+import ru.mail.android.androidmailproject.auxiliary.ImageManager;
 import ru.mail.android.androidmailproject.auxiliary.LoadImageTask;
-import ru.mail.android.androidmailproject.sql.DBHelper;
 
 public class ImagesSingltone {
     private static ImagesSingltone instance;
     private static LruCache<String, Bitmap> memoryCache;
+    private Context context;
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
 
     ImagesSingltone() {
         if (memoryCache == null) {
@@ -57,7 +63,22 @@ public class ImagesSingltone {
 
     public void addBitmapToMemoryCache(int position, Bitmap bitmap) {
         String name = CurrenciesSingletone.getInstance().getCurrenciesNames()[position];
-        memoryCache.put(name, bitmap);
+
+        if (bitmap != null)
+            memoryCache.put(name, ImageManager.addBorder(ImageManager.makeTransparentBackground(bitmap)));
+        else {
+            int resourceId = context.getResources().getIdentifier(name.toLowerCase(), "drawable", context.getPackageName());
+            if (resourceId == 0)
+                resourceId = context.getResources().getIdentifier(name.toLowerCase() + "_", "drawable", context.getPackageName());
+            if (resourceId == 0)
+                return;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                memoryCache.put(name, ImageManager.addBorder(ImageManager.makeTransparentBackground(ImageManager.fromBlackToGray(
+                        ((BitmapDrawable) context.getResources().getDrawable(resourceId, context.getTheme())).getBitmap()))));
+            } else
+                memoryCache.put(name, ImageManager.addBorder(ImageManager.makeTransparentBackground(ImageManager.fromBlackToGray(
+                        ((BitmapDrawable) context.getResources().getDrawable(R.drawable.inr)).getBitmap()))));
+        }
     }
 
 

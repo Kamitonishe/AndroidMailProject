@@ -120,16 +120,11 @@ public class CurrenciesSingletone {
     }
 
     public String[] getCurrenciesNames() {
-
-        if (currencieNames == null) {
-            currencieNames = new String[currencies.size()];
-
-            int i = 0;
-            for (Currency cur : currencies.values())
-                currencieNames[i++] = cur.getName();
-        }
-
-        return currencieNames;
+        android.util.Pair<String, Integer>[] ans1 = getCurrenciesNamesAndStates();
+        String[] ans = new String[ans1.length];
+        for (int i = 0; i < ans1.length; ++i)
+            ans[i] = ans1[i].first;
+        return ans;
     }
 
 

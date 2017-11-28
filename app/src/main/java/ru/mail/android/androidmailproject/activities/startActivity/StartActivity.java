@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import ru.mail.android.androidmailproject.auxiliary.JSONTask;
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
@@ -26,9 +28,11 @@ import ru.mail.android.androidmailproject.sql.DBHelper;
 
 public class StartActivity extends AppCompatActivity {
     private DBHelper helper;
+    private ExecutorService service;
 
     private NoConnectionFragment noConnectionFragment;
     private ProgressBarFragment progressBarFragment;
+
 
     public class JSONTaskInStart extends JSONTask {
 
@@ -36,50 +40,61 @@ public class StartActivity extends AppCompatActivity {
             super.onPostExecute(result);
             CurrenciesSingletone.getInstance().fillCurrencies(result[0]);
 
-            SQLiteDatabase db_write = helper.getWritableDatabase();
             String query = "INSERT INTO currencies_names(name, state) VALUES (\"" + result[0].getBase() + "\", 0)";
 
             for (Map.Entry entry : result[0].getRates().entrySet())
                 query += ", (\"" + (String) entry.getKey() + "\", 0)";
 
-            db_write.execSQL(query);
+            final String query_ = query;
+
+            service.submit(new Runnable() {
+                @Override
+                public void run() {
+                    SQLiteDatabase db_write = helper.getWritableDatabase();
+                    db_write.execSQL(query_);
+                }
+            });
 
             callMainActivity();
         }
     }
 
     void tryToCallMainActivity() {
-        SQLiteDatabase db_read = helper.getReadableDatabase();
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
+                String count = "SELECT count(*) FROM currencies_names";
+                SQLiteDatabase db_read = helper.getReadableDatabase();
+                Cursor mcursor = db_read.rawQuery(count, null);
+                mcursor.moveToFirst();
 
-        String count = "SELECT count(*) FROM currencies_names";
-        Cursor mcursor = db_read.rawQuery(count, null);
-        mcursor.moveToFirst();
+                if (mcursor.getInt(0) == 0) {
+                    if (NetworkManager.isNetworkAvailable(getApplicationContext()))
+                        new JSONTaskInStart().execute("RUB", "latest");
+                    else {
+                        Toast.makeText(getApplicationContext(),
+                                "Need internet connection for the first run", Toast.LENGTH_LONG).show();
 
-        if (mcursor.getInt(0) == 0) {
-            if (NetworkManager.isNetworkAvailable(getApplicationContext()))
-                new JSONTaskInStart().execute("RUB", "latest");
-            else {
-                Toast.makeText(getApplicationContext(),
-                        "Need internet connection for the first run", Toast.LENGTH_LONG).show();
+                        FragmentTransaction ftrans = getFragmentManager().beginTransaction();
+                        ftrans.replace(R.id.fragmentsFrameStart, noConnectionFragment);
+                        ftrans.commit();
+                    }
+                }
+                else {
+                    String query = "SELECT * FROM currencies_names";
+                    mcursor.close();
+                    mcursor = db_read.rawQuery(query, null);
+                    mcursor.moveToFirst();
+                    ArrayList<Pair<String, Integer>> names = new ArrayList<>();
+                    do {
+                        names.add(new Pair<>(mcursor.getString(0), mcursor.getInt(1)));
+                    } while (mcursor.moveToNext());
 
-                FragmentTransaction ftrans = getFragmentManager().beginTransaction();
-                ftrans.replace(R.id.fragmentsFrameStart, noConnectionFragment);
-                ftrans.commit();
+                    CurrenciesSingletone.getInstance().fillCurrencies(names);
+                    callMainActivity();
+                }
             }
-        }
-        else {
-            String query = "SELECT * FROM currencies_names";
-            mcursor.close();
-            mcursor = db_read.rawQuery(query, null);
-            mcursor.moveToFirst();
-            ArrayList<Pair<String, Integer>> names = new ArrayList<>();
-            do {
-                names.add(new Pair<>(mcursor.getString(0), mcursor.getInt(1)));
-            } while (mcursor.moveToNext());
-
-            CurrenciesSingletone.getInstance().fillCurrencies(names);
-            callMainActivity();
-        }
+        });
     }
 
     @Override
@@ -87,6 +102,7 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         helper = new DBHelper(this);
+        service = Executors.newCachedThreadPool();
         progressBarFragment = new ProgressBarFragment();
         noConnectionFragment = new NoConnectionFragment();
 

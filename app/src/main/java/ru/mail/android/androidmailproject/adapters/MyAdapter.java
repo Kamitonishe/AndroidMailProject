@@ -86,6 +86,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.ratingBar.setRating(states.get(mCurrencyNamesSet[position]));
         holder.changeBtn.setOnClickListener(new ChangeBtnListener(position));
         holder.ratingBar.setOnTouchListener(new RatingBarListener(position));
+        ImagesSingltone.getInstance().setContext(context);
         ImagesSingltone.getInstance().loadImage(context, position, holder.imageView);
     }
 
