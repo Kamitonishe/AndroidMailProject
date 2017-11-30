@@ -1,9 +1,12 @@
 package ru.mail.android.androidmailproject.data;
 
 
+import android.graphics.Bitmap;
 import android.support.v4.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,13 +20,21 @@ import ru.mail.android.androidmailproject.auxiliary.DateManager;
 
 public class CurrenciesSingletone {
     private static CurrenciesSingletone instance;
-    private Map<Pair<String, String>, Currencies> currencies;
-    private Map<String, Integer> states;
+
+    List<CurrenciesListener> listeners = new ArrayList<>();
+
+    private Map<String, Currency> currencies;
     private Map<String, String> latestFeaturedDate;
+<<<<<<< HEAD
     List<CurrenciesListener> listeners;
     private String[] currenciesNames;
     private boolean isFilled;
+=======
+    String[] currencieNames;
+
+>>>>>>> 905c261ff825dd62422134a576a67947d746f45b
     private String latest = "";
+
 
     public static CurrenciesSingletone getInstance() {
         synchronized (CurrenciesSingletone.class) {
@@ -35,70 +46,71 @@ public class CurrenciesSingletone {
     }
 
     private CurrenciesSingletone() {
-        isFilled = false;
-        currencies = new HashMap<>();
-        states = new HashMap<>();
         latestFeaturedDate = new HashMap<>();
+<<<<<<< HEAD
         listeners =  new ArrayList<CurrenciesListener>();;
+=======
+        currencies = new HashMap<>();
+>>>>>>> 905c261ff825dd62422134a576a67947d746f45b
     }
 
     public void addCurrency(Currencies currencies, boolean isLatest) {
         synchronized (CurrenciesSingletone.class) {
             if (isLatest)
                 latest = currencies.getDate();
+<<<<<<< HEAD
             if (!this.currencies.containsKey(new Pair<String, String>(currencies.getBase(), currencies.getDate()))) {
                 this.currencies.put(new Pair<String, String>(currencies.getBase(), currencies.getDate()), currencies);
                 if (!latestFeaturedDate.containsKey(currencies.getBase()) ||
                         DateManager.isLaterThan(currencies.getDate(), latestFeaturedDate.get(currencies.getBase())))
                     latestFeaturedDate.put(currencies.getBase(), currencies.getDate());
             }
+=======
+
+            if (this.currencies.containsKey(currencies.getBase()))
+                this.currencies.get(currencies.getBase()).addRates(currencies.getDate(), currencies.getRates());
+
+            if (!latestFeaturedDate.containsKey(currencies.getBase()) ||
+                    DateManager.isLaterThan(currencies.getDate(), latestFeaturedDate.get(currencies.getBase())))
+                latestFeaturedDate.put(currencies.getBase(), currencies.getDate());
+            currencieNames = null;
+>>>>>>> 905c261ff825dd62422134a576a67947d746f45b
         }
     }
 
-    public void fillCurrenciesNames(Currencies currencies) {
+    public void fillCurrencies(Currencies currencies) {
         synchronized (CurrenciesSingletone.class) {
-
-            isFilled = true;
             Map<String, Float> map = currencies.getRates();
-            int i = 0;
 
-            currenciesNames = new String[map.size() + 1];
-            currenciesNames[0] = currencies.getBase();
-            states.put(currenciesNames[0], 0);
+            for (Map.Entry<String, Float> entry : map.entrySet())
+                this.currencies.put(entry.getKey(), new Currency(entry.getKey(), 0));
 
-            for (Map.Entry entry : map.entrySet()) {
-                i++;
-                currenciesNames[i] = (String) entry.getKey();
-                states.put(currenciesNames[i], 0);
-            }
+            currencieNames = null;
+
         }
     }
 
-    public void fillCurrenciesNames(ArrayList<Pair<String, Integer>> names) {
+    public void fillCurrencies(ArrayList<Pair<String, Integer>> names) {
         synchronized (CurrenciesSingletone.class) {
 
-            isFilled = true;
+            for (int i = 0; i < names.size(); ++i)
+                currencies.put(names.get(i).first, new Currency(names.get(i).first, names.get(i).second));
 
-            currenciesNames = new String[names.size()];
-
-            for (int i = 0; i < names.size(); ++i) {
-                currenciesNames[i] = names.get(i).first;
-                states.put(names.get(i).first, names.get(i).second);
-            }
+            currencieNames = null;
         }
     }
 
-    public Currencies getCurrencyInfo(String name, String date) {
+    public Float getCurrencyRate(String base, String date, String toCompare) {
         synchronized (CurrenciesSingletone.class) {
             if (date.equals("latest"))
-                return currencies.get(new Pair<String, String>(name, latest));
-            return currencies.get(new Pair<String, String>(name, date));
+                return currencies.get(base).getRate(date, toCompare);
+            return currencies.get(base).getRate(date, toCompare);
         }
     }
 
-    public boolean hasInfo(String name, String date) {
+    public boolean hasInfo(String base, String date, String toCompare) {
         synchronized (CurrenciesSingletone.class) {
-            return currencies.containsKey(new Pair<String, String>(name, date));
+            return currencies.get(base).hasInfo(date, toCompare);
         }
     }
 
@@ -108,17 +120,37 @@ public class CurrenciesSingletone {
         }
     }
 
-    public String[] getCurrenciesNames() {
+    public android.util.Pair<String, Integer>[] getCurrenciesNamesAndStates() {
         synchronized (CurrenciesSingletone.class) {
-            return currenciesNames;
+            android.util.Pair<String, Integer>[] ans = new android.util.Pair[currencies.size()];
+            int i = 0;
+            for (Currency cur : currencies.values())
+                ans[i++] = new android.util.Pair<>(cur.getName(), cur.getState());
+
+            Arrays.sort(ans, new Comparator<android.util.Pair<String, Integer>>() {
+                @Override
+                public int compare(android.util.Pair<String, Integer> st1, android.util.Pair<String, Integer> st2) {
+                    return -st1.second.compareTo(st2.second);
+                }
+            });
+
+            return ans;
         }
     }
 
-    public Map<String, Integer> getCurrenciesStates() {
-        synchronized (CurrenciesSingletone.class) {
-            return states;
+    public String[] getCurrenciesNames() {
+
+        if (currencieNames == null) {
+            currencieNames = new String[currencies.size()];
+
+            int i = 0;
+            for (Currency cur : currencies.values())
+                currencieNames[i++] = cur.getName();
         }
+
+        return currencieNames;
     }
+
 
     public String getLatestFeaturedDate(String base) {
         return latestFeaturedDate.get(base);
@@ -145,6 +177,8 @@ public class CurrenciesSingletone {
     }
 
     public void changeState(String s) {
-        states.put(s, 1 - states.get(s));
+        currencies.get(s).changeState();
     }
+
+
 }

@@ -1,5 +1,6 @@
-package ru.mail.android.androidmailproject;
+package ru.mail.android.androidmailproject.activities.startActivity;
 
+import android.app.FragmentTransaction;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.util.Pair;
@@ -11,7 +12,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Map;
 
+import ru.mail.android.androidmailproject.auxiliary.JSONTask;
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
+import ru.mail.android.androidmailproject.activities.mainActivity.MainActivity;
+import ru.mail.android.androidmailproject.R;
 import ru.mail.android.androidmailproject.auxiliary.NetworkManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 import ru.mail.android.androidmailproject.sql.DBHelper;
@@ -23,11 +27,14 @@ import ru.mail.android.androidmailproject.sql.DBHelper;
 public class StartActivity extends AppCompatActivity {
     private DBHelper helper;
 
+    private NoConnectionFragment noConnectionFragment;
+    private ProgressBarFragment progressBarFragment;
+
     public class JSONTaskInStart extends JSONTask {
 
         protected void onPostExecute(Currencies[] result) {
             super.onPostExecute(result);
-            CurrenciesSingletone.getInstance().fillCurrenciesNames(result[0]);
+            CurrenciesSingletone.getInstance().fillCurrencies(result[0]);
 
             SQLiteDatabase db_write = helper.getWritableDatabase();
             String query = "INSERT INTO currencies_names(name, state) VALUES (\"" + result[0].getBase() + "\", 0)";
@@ -40,12 +47,8 @@ public class StartActivity extends AppCompatActivity {
             callMainActivity();
         }
     }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
 
-        helper = new DBHelper(this);
+    void tryToCallMainActivity() {
         SQLiteDatabase db_read = helper.getReadableDatabase();
 
         String count = "SELECT count(*) FROM currencies_names";
@@ -58,13 +61,10 @@ public class StartActivity extends AppCompatActivity {
             else {
                 Toast.makeText(getApplicationContext(),
                         "Need internet connection for the first run", Toast.LENGTH_LONG).show();
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                this.finish();
-                return;
+
+                FragmentTransaction ftrans = getFragmentManager().beginTransaction();
+                ftrans.replace(R.id.fragmentsFrameStart, noConnectionFragment);
+                ftrans.commit();
             }
         }
         else {
@@ -77,10 +77,24 @@ public class StartActivity extends AppCompatActivity {
                 names.add(new Pair<>(mcursor.getString(0), mcursor.getInt(1)));
             } while (mcursor.moveToNext());
 
-            CurrenciesSingletone.getInstance().fillCurrenciesNames(names);
+            CurrenciesSingletone.getInstance().fillCurrencies(names);
             callMainActivity();
         }
+    }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_start);
+        helper = new DBHelper(this);
+        progressBarFragment = new ProgressBarFragment();
+        noConnectionFragment = new NoConnectionFragment();
+
+        FragmentTransaction ftrans = getFragmentManager().beginTransaction();
+        ftrans.add(R.id.fragmentsFrameStart, progressBarFragment);
+        ftrans.commit();
+
+        tryToCallMainActivity();
     }
 
     public void callMainActivity() {

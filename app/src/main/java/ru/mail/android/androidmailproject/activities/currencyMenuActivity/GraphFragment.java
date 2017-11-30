@@ -1,4 +1,4 @@
-package ru.mail.android.androidmailproject;
+package ru.mail.android.androidmailproject.activities.currencyMenuActivity;
 
 import android.app.Fragment;
 import android.graphics.Color;
@@ -19,7 +19,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+<<<<<<< HEAD:app/src/main/java/ru/mail/android/androidmailproject/GraphFragment.java
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
+=======
+import ru.mail.android.androidmailproject.R;
+>>>>>>> 905c261ff825dd62422134a576a67947d746f45b:app/src/main/java/ru/mail/android/androidmailproject/activities/currencyMenuActivity/GraphFragment.java
 import ru.mail.android.androidmailproject.auxiliary.DateManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 
@@ -51,17 +55,17 @@ public class GraphFragment extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String currentDate = sdf.format(new Date());
 
-        latest.setTextSize(20);
-        if (CurrenciesSingletone.getInstance().hasInfo(baseCurrency, currentDate)) {
-            Currencies cur = CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, currentDate);
-            latest.setText("\n\nКурс на " + cur.getDate() + " : " + cur.getRates().get(currencyToCompare));
+        latest.setTextSize(15);
+        if (CurrenciesSingletone.getInstance().hasInfo(baseCurrency, currentDate, currencyToCompare)) {
+            Float rate = CurrenciesSingletone.getInstance().getCurrencyRate(baseCurrency, currentDate, currencyToCompare);
+            latest.setText("\nКурс на " + currentDate + " : " + rate);
         }
         else {
             latest.setText("Отсутствует интернет-соединение");
             if (CurrenciesSingletone.getInstance().hasInfo(baseCurrency)) {
                 String date = CurrenciesSingletone.getInstance().getLatestFeaturedDate(baseCurrency);
-                Currencies cur = CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, date);
-                latest.append("\n\nКурс на " + date + " : " + cur.getRates().get(currencyToCompare));
+                Float rate = CurrenciesSingletone.getInstance().getCurrencyRate(baseCurrency, date, currencyToCompare);
+                latest.append("\nКурс на " + date + " : " + rate);
             }
         }
     }
@@ -90,9 +94,13 @@ public class GraphFragment extends Fragment {
 
             cal.set(y, m - 1, d);
 
-            if (CurrenciesSingletone.getInstance().hasInfo(baseCurrency, currentDate))
+            if (CurrenciesSingletone.getInstance().hasInfo(baseCurrency, currentDate, currencyToCompare))
                 points.add(new DataPoint(cal.getTime(), baseCurrency.equals(currencyToCompare) ? 1 :
+<<<<<<< HEAD:app/src/main/java/ru/mail/android/androidmailproject/GraphFragment.java
                     CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, currentDate).getRates().get(currencyToCompare)));
+=======
+                    CurrenciesSingletone.getInstance().getCurrencyRate(baseCurrency, currentDate, currencyToCompare)));
+>>>>>>> 905c261ff825dd62422134a576a67947d746f45b:app/src/main/java/ru/mail/android/androidmailproject/activities/currencyMenuActivity/GraphFragment.java
             currentDate = DateManager.aMonthBefore(currentDate);
         }
 
