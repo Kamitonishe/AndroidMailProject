@@ -74,10 +74,9 @@ public class LoadImageTask extends AsyncTask<Void, Void, Bitmap> {
             bitmap = null;
 
         Bitmap bm = ImagesSingltone.getInstance().getBitmapFromMemCache(index);
-        if (bm == null && bitmap != null) {
-            ImagesSingltone.getInstance().addBitmapToMemoryCache(index, bitmap);
+        ImagesSingltone.getInstance().addBitmapToMemoryCache(index, bitmap);
+        if (bm == null)
             bm = bitmap;
-        }
         ImageView iv = weakIv.get();
         if (iv != null && this == getBitmapDownloaderTask(iv)) {
             iv.setImageBitmap(bm);
