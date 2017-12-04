@@ -25,14 +25,8 @@ public class CurrenciesSingletone {
 
     private Map<String, Currency> currencies;
     private Map<String, String> latestFeaturedDate;
-<<<<<<< HEAD
-    List<CurrenciesListener> listeners;
-    private String[] currenciesNames;
-    private boolean isFilled;
-=======
     String[] currencieNames;
 
->>>>>>> 905c261ff825dd62422134a576a67947d746f45b
     private String latest = "";
 
 
@@ -47,25 +41,13 @@ public class CurrenciesSingletone {
 
     private CurrenciesSingletone() {
         latestFeaturedDate = new HashMap<>();
-<<<<<<< HEAD
-        listeners =  new ArrayList<CurrenciesListener>();;
-=======
         currencies = new HashMap<>();
->>>>>>> 905c261ff825dd62422134a576a67947d746f45b
     }
 
     public void addCurrency(Currencies currencies, boolean isLatest) {
         synchronized (CurrenciesSingletone.class) {
             if (isLatest)
                 latest = currencies.getDate();
-<<<<<<< HEAD
-            if (!this.currencies.containsKey(new Pair<String, String>(currencies.getBase(), currencies.getDate()))) {
-                this.currencies.put(new Pair<String, String>(currencies.getBase(), currencies.getDate()), currencies);
-                if (!latestFeaturedDate.containsKey(currencies.getBase()) ||
-                        DateManager.isLaterThan(currencies.getDate(), latestFeaturedDate.get(currencies.getBase())))
-                    latestFeaturedDate.put(currencies.getBase(), currencies.getDate());
-            }
-=======
 
             if (this.currencies.containsKey(currencies.getBase()))
                 this.currencies.get(currencies.getBase()).addRates(currencies.getDate(), currencies.getRates());
@@ -74,7 +56,6 @@ public class CurrenciesSingletone {
                     DateManager.isLaterThan(currencies.getDate(), latestFeaturedDate.get(currencies.getBase())))
                 latestFeaturedDate.put(currencies.getBase(), currencies.getDate());
             currencieNames = null;
->>>>>>> 905c261ff825dd62422134a576a67947d746f45b
         }
     }
 

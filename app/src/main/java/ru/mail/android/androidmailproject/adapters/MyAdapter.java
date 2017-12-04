@@ -62,14 +62,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         states = new HashMap<>();
         service = Executors.newCachedThreadPool();
 
-<<<<<<< HEAD
-=======
+
         for (Pair<String, Integer> nameAndState : currencies) {
             mCurrencyNamesSet[i++] = nameAndState.first;
             this.states.put(nameAndState.first, nameAndState.second);
         }
     }
->>>>>>> 905c261ff825dd62422134a576a67947d746f45b
+
 
     @Override
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,

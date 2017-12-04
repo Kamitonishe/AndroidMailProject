@@ -23,11 +23,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
-<<<<<<< HEAD:app/src/main/java/ru/mail/android/androidmailproject/GraphFragment.java
-import ru.mail.android.androidmailproject.JsonModels.Currencies;
-=======
 import ru.mail.android.androidmailproject.R;
->>>>>>> 905c261ff825dd62422134a576a67947d746f45b:app/src/main/java/ru/mail/android/androidmailproject/activities/currencyMenuActivity/GraphFragment.java
 import ru.mail.android.androidmailproject.auxiliary.DateManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 
@@ -100,16 +96,8 @@ public class GraphFragment extends Fragment {
             cal.set(y, m - 1, d);
 
             if (CurrenciesSingletone.getInstance().hasInfo(baseCurrency, currentDate, currencyToCompare))
-<<<<<<< HEAD
-                points.add(new DataPoint(cal.getTime(), baseCurrency.equals(currencyToCompare) ? 1 :
-<<<<<<< HEAD:app/src/main/java/ru/mail/android/androidmailproject/GraphFragment.java
-                    CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrency, currentDate).getRates().get(currencyToCompare)));
-=======
-=======
                 points.add(new DataPoint(cal.getTime().getTime(), baseCurrency.equals(currencyToCompare) ? 1 :
->>>>>>> 2c35c955088a1a46f0735b4f47b42691cf824df1
-                    CurrenciesSingletone.getInstance().getCurrencyRate(baseCurrency, currentDate, currencyToCompare)));
->>>>>>> 905c261ff825dd62422134a576a67947d746f45b:app/src/main/java/ru/mail/android/androidmailproject/activities/currencyMenuActivity/GraphFragment.java
+                        CurrenciesSingletone.getInstance().getCurrencyRate(baseCurrency, currentDate, currencyToCompare)));
             currentDate = DateManager.aMonthBefore(currentDate);
         }
 
