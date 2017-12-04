@@ -1,11 +1,15 @@
 package ru.mail.android.androidmailproject.activities.currencyMenuActivity;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +39,9 @@ public class GraphFragment extends Fragment {
     private String baseCurrency, currencyToCompare;
     private TextView latest;
     private GraphView graph;
+    private Button chooseDate;
+
+    private String firstDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,10 +52,35 @@ public class GraphFragment extends Fragment {
         return inflater.inflate(R.layout.graph_fragment_layout, null);
     }
 
+    final DatePickerDialog.OnDateSetListener datePickerListener=new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            //нужно добавить нули
+            firstDate = String.valueOf(year) + "-" + String.valueOf(monthOfYear) + "-" + String.valueOf(dayOfMonth);
+            updateGraph();
+        }
+    };
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        latest = (TextView)getView().findViewById(R.id.latest_textview);
-        graph = (GraphView)getView().findViewById(R.id.graph_);
+        latest = getView().findViewById(R.id.latest_textview);
+        graph = getView().findViewById(R.id.graph_);
+        chooseDate = getView().findViewById(R.id.choose_date_button);
+
+        chooseDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar cal = Calendar.getInstance();
+                DatePickerDialog datePicker = new DatePickerDialog(v.getContext(), datePickerListener,
+                        cal.get(Calendar.YEAR),
+                        cal.get(Calendar.MONTH),
+                        cal.get(Calendar.DAY_OF_MONTH));
+                cal.set(1990, 11, 1);
+                datePicker.setCancelable(true);
+                datePicker.getDatePicker().setMinDate(cal.getTime().getTime());
+                datePicker.show();
+            }
+        });
 
         initGraph();
 
@@ -69,6 +101,8 @@ public class GraphFragment extends Fragment {
             }
         }
     }
+
+    private void updateGraph() {}
 
     private void initGraph() {
         graph.getGridLabelRenderer().setHumanRounding(false);
@@ -98,6 +132,9 @@ public class GraphFragment extends Fragment {
             if (CurrenciesSingletone.getInstance().hasInfo(baseCurrency, currentDate, currencyToCompare))
                 points.add(new DataPoint(cal.getTime().getTime(), baseCurrency.equals(currencyToCompare) ? 1 :
                     CurrenciesSingletone.getInstance().getCurrencyRate(baseCurrency, currentDate, currencyToCompare)));
+
+            if (i == 3)
+                firstDate = currentDate;
             currentDate = DateManager.aMonthBefore(currentDate);
         }
 
