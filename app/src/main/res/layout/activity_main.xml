@@ -42,7 +42,8 @@
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleMarginEnd="64dp"
-            app:title="@string/app_name">
+            app:title="@string/app_name"
+            >
 
             <ImageView
                 android:id="@+id/toolbarImage"
