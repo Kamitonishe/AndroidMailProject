@@ -81,6 +81,10 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         }
     }
 
+    public String getLastDate() {
+        return lastDate;
+    }
+
 
     public class JSONTaskForCurrencyMenu extends JSONTask {
 

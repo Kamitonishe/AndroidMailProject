@@ -126,11 +126,11 @@ public class StartActivity extends AppCompatActivity {
 
 
         //service.submit(new Runnable() {
-          //  @Override
-          //  public void run() {
+        //  @Override
+        //  public void run() {
 
-          //  }
-    ///    });
+        //  }
+        ///    });
         tryToCallMainActivity();
     }
 
