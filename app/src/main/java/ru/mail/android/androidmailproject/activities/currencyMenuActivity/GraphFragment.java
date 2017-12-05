@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 import ru.mail.android.androidmailproject.R;
@@ -39,15 +40,15 @@ public class GraphFragment extends Fragment {
     private String baseCurrency, currencyToCompare;
     private TextView latest;
     private GraphView graph;
+    private String lastDate;
     private Button chooseDate;
-
-    private String firstDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         baseCurrency = getArguments().getString("base_currency");
         currencyToCompare = getArguments().getString("currency_to_compare");
+        lastDate = getArguments().getString("last_date");
 
         return inflater.inflate(R.layout.graph_fragment_layout, null);
     }
@@ -55,9 +56,8 @@ public class GraphFragment extends Fragment {
     final DatePickerDialog.OnDateSetListener datePickerListener=new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            //нужно добавить нули
-            firstDate = String.valueOf(year) + "-" + String.valueOf(monthOfYear) + "-" + String.valueOf(dayOfMonth);
-            updateGraph();
+            String lastDate = String.valueOf(year) + "-" + String.valueOf(monthOfYear) + "-" + String.valueOf(dayOfMonth);
+            ((CurrencyMenuActivity)getActivity()).showComparisionWithAnotherCurrency(currencyToCompare, DateManager.addZeros(lastDate));
         }
     };
 
@@ -75,6 +75,7 @@ public class GraphFragment extends Fragment {
                         cal.get(Calendar.YEAR),
                         cal.get(Calendar.MONTH),
                         cal.get(Calendar.DAY_OF_MONTH));
+                datePicker.getDatePicker().setMaxDate(cal.getTime().getTime());
                 cal.set(1990, 11, 1);
                 datePicker.setCancelable(true);
                 datePicker.getDatePicker().setMinDate(cal.getTime().getTime());
@@ -85,7 +86,7 @@ public class GraphFragment extends Fragment {
         initGraph();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String currentDate = sdf.format(new Date());
+        String currentDate = lastDate == null ? sdf.format(new Date()) : lastDate;
 
         latest.setTextSize(15);
         if (CurrenciesSingletone.getInstance().hasInfo(baseCurrency, currentDate, currencyToCompare)) {
@@ -102,8 +103,6 @@ public class GraphFragment extends Fragment {
         }
     }
 
-    private void updateGraph() {}
-
     private void initGraph() {
         graph.getGridLabelRenderer().setHumanRounding(false);
 
@@ -115,7 +114,7 @@ public class GraphFragment extends Fragment {
         graph.getViewport().setXAxisBoundsManual(true);
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String currentDate = sdf.format(new Date());
+        String currentDate = lastDate == null ? sdf.format(new Date()) : lastDate;
 
         Calendar cal = Calendar.getInstance();
 
@@ -133,11 +132,10 @@ public class GraphFragment extends Fragment {
                 points.add(new DataPoint(cal.getTime().getTime(), baseCurrency.equals(currencyToCompare) ? 1 :
                     CurrenciesSingletone.getInstance().getCurrencyRate(baseCurrency, currentDate, currencyToCompare)));
 
-            if (i == 3)
-                firstDate = currentDate;
             currentDate = DateManager.aMonthBefore(currentDate);
         }
 
+        Collections.reverse(points);
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points.toArray(new DataPoint[points.size()]));
 
         series.setTitle(baseCurrency + " in " + currencyToCompare);

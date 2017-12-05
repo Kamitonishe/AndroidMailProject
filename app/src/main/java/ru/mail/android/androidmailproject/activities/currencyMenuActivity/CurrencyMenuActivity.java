@@ -38,6 +38,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
 
     private String baseCurrencyName;
     private String currencyToCompare = "EUR";
+    String lastDate;
 
     private GraphFragment graphFragment;
     private LoadingInCurrencyMenuFragment loadingFragment;
@@ -133,7 +134,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
 
         if (NetworkManager.isNetworkAvailable(getApplicationContext())) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String currentDate = sdf.format(new Date());
+            String currentDate = lastDate == null ? sdf.format(new Date()) : lastDate;
 
             for (int i = 0; i < 4; ++i) {
                 if (!CurrenciesSingletone.getInstance().hasInfo(baseCurrencyName, currentDate, currencyToCompare)) {
@@ -149,13 +150,15 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         task.execute(params.toArray(new String[params.size()]));
     }
 
-    public void showComparisionWithAnotherCurrency(String currency) {
+    public void showComparisionWithAnotherCurrency(String currency, String lastDate) {
 
         currencyToCompare = currency;
+        this.lastDate = lastDate;
 
         Bundle toGraphFragment = new Bundle();
         toGraphFragment.putString("base_currency", baseCurrencyName);
         toGraphFragment.putString("currency_to_compare", currencyToCompare);
+        toGraphFragment.putString("last_date", lastDate);
 
         if (graphFragment.getArguments() == null)
             graphFragment.setArguments(toGraphFragment);

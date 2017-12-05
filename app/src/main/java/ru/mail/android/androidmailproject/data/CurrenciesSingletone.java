@@ -89,6 +89,12 @@ public class CurrenciesSingletone {
         }
     }
 
+    public Currency getCurrencyRates(String base) {
+        synchronized (CurrenciesSingletone.class) {
+            return currencies.get(base);
+        }
+    }
+
     public boolean hasInfo(String base, String date, String toCompare) {
         synchronized (CurrenciesSingletone.class) {
             return currencies.get(base).hasInfo(date, toCompare);

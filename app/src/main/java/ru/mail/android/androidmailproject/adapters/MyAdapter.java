@@ -103,7 +103,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             if (context instanceof MainActivity)
                 ((MainActivity) context).startCurrencyMenuActivity(mCurrencyNamesSet[position]);
             else if (context instanceof CurrencyMenuActivity)
-                ((CurrencyMenuActivity) context).showComparisionWithAnotherCurrency(mCurrencyNamesSet[position]);
+                ((CurrencyMenuActivity) context).showComparisionWithAnotherCurrency(mCurrencyNamesSet[position], null);
         }
     }
 

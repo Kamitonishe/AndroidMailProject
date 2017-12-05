@@ -38,4 +38,13 @@ public class DateManager {
         int d1 = Integer.valueOf(splited1[2]), d2 = Integer.valueOf(splited2[2]);
         return d1 > d2;
     }
+
+    public static String addZeros(String date) {
+        String[] splited = date.split("-");
+        if (splited[1].length() == 1)
+            splited[1] = "0" + splited[1];
+        if (splited[2].length() == 1)
+            splited[2] = "0" + splited[2];
+        return splited[0] + "-" + splited[1] + "-" + splited[2];
+    }
 }
