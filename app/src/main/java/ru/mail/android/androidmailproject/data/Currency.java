@@ -21,7 +21,7 @@ public class Currency {
         state = 1 - state;
     }
 
-    public Integer getState() {
+    Integer getState() {
         return state;
     }
 
@@ -41,4 +41,6 @@ public class Currency {
     boolean hasInfo(String date, String toCompare) {
         return rates.containsKey(new Pair<>(date, toCompare));
     }
+
+    public Map<Pair<String, String>, Float> getRates() {return rates;}
 }

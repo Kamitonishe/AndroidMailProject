@@ -64,8 +64,8 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void run() {
                 String count = "SELECT count(*) FROM currencies_names";
-                SQLiteDatabase db_read = helper.getReadableDatabase();
-                Cursor mcursor = db_read.rawQuery(count, null);
+                final SQLiteDatabase db = helper.getReadableDatabase();
+                Cursor mcursor = db.rawQuery(count, null);
                 mcursor.moveToFirst();
 
                 if (mcursor.getInt(0) == 0) {
@@ -83,7 +83,7 @@ public class StartActivity extends AppCompatActivity {
                 else {
                     String query = "SELECT * FROM currencies_names";
                     mcursor.close();
-                    mcursor = db_read.rawQuery(query, null);
+                    mcursor = db.rawQuery(query, null);
                     mcursor.moveToFirst();
                     ArrayList<Pair<String, Integer>> names = new ArrayList<>();
                     do {
@@ -91,6 +91,20 @@ public class StartActivity extends AppCompatActivity {
                     } while (mcursor.moveToNext());
 
                     CurrenciesSingletone.getInstance().fillCurrencies(names);
+
+                    service.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            Cursor cursor = db.rawQuery("SELECT * FROM currencies_rates", null);
+                            cursor.moveToFirst();
+                            do {
+                                CurrenciesSingletone.getInstance().getCurrencyRates(cursor.getString(0))
+                                        .getRates().put(new android.util.Pair<>(cursor.getString(1), cursor.getString(2)), cursor.getFloat(3));
+                            } while (cursor.moveToNext());
+                            cursor.close();
+                        }
+                    });
+
                     callMainActivity();
                 }
             }
@@ -110,6 +124,13 @@ public class StartActivity extends AppCompatActivity {
         ftrans.add(R.id.fragmentsFrameStart, progressBarFragment);
         ftrans.commit();
 
+
+        //service.submit(new Runnable() {
+        //  @Override
+        //  public void run() {
+
+        //  }
+        ///    });
         tryToCallMainActivity();
     }
 
