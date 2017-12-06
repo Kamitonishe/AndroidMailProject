@@ -131,7 +131,6 @@ public class GraphFragment extends Fragment {
             if (CurrenciesSingletone.getInstance().hasInfo(baseCurrency, currentDate, currencyToCompare))
                 points.add(new DataPoint(cal.getTime().getTime(), baseCurrency.equals(currencyToCompare) ? 1 :
                     CurrenciesSingletone.getInstance().getCurrencyRate(baseCurrency, currentDate, currencyToCompare)));
-
             currentDate = DateManager.aMonthBefore(currentDate);
         }
 

@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AlertDialogLayout;
@@ -25,6 +26,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.Map;
+import android.util.Log;
+import android.util.Pair;
+import android.content.Intent;
+import android.view.View;
 
 import ru.mail.android.androidmailproject.activities.currencyMenuActivity.CurrencyMenuActivity;
 import ru.mail.android.androidmailproject.R;

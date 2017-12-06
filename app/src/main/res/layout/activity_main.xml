@@ -13,7 +13,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
+        android:background="@color/colorPrimary"
        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="70sp"
+            android:gravity="center"
+            android:text="@string/kurs"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:layout_marginTop="50dp"/>
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
@@ -31,7 +42,8 @@
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginStart="48dp"
             app:expandedTitleMarginEnd="64dp"
-            app:title="@string/app_name">
+            app:title="@string/app_name"
+            >
 
             <ImageView
                 android:id="@+id/toolbarImage"

@@ -12,12 +12,15 @@
         android:label="Курс валют"
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
+
         android:theme="@style/AppTheme">
 
-        <activity android:name=".activities.mainActivity.MainActivity">
+        <activity android:name=".activities.mainActivity.MainActivity"
+            android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".activities.startActivity.StartActivity">
+        <activity android:name=".activities.startActivity.StartActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,7 +28,8 @@
         </activity>
 
         <activity android:name=".activities.currencyMenuActivity.CurrencyMenuActivity"
-            android:parentActivityName=".activities.mainActivity.MainActivity">
+            android:parentActivityName=".activities.mainActivity.MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.mainActivity.MainActivity"/>
