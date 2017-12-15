@@ -1,6 +1,7 @@
 package ru.mail.android.androidmailproject.activities.currencyMenuActivity;
 
 import android.app.FragmentTransaction;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -32,7 +33,6 @@ import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 
 public class CurrencyMenuActivity extends AppCompatActivity {
     private TextView textView;
-    private RecyclerView recycleView;
     private TextView textViewHelp;
     private FrameLayout fragmentsFrame;
 
@@ -46,11 +46,9 @@ public class CurrencyMenuActivity extends AppCompatActivity {
     FragmentTransaction fTrans;
 
     protected void recyclerViewSet() {
-        recycleView = (RecyclerView) findViewById(R.id.recycler1);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recycleView.setLayoutManager(linearLayoutManager);
-        MyAdapter recyclerAdapter = new MyAdapter(CurrencyMenuActivity.this);
-        recycleView.setAdapter(recyclerAdapter);
+        RecyclerView recycleView = (RecyclerView) findViewById(R.id.recycler1);
+        recycleView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recycleView.setAdapter(new MyAdapter(CurrencyMenuActivity.this));
     }
 
     public void toggleContents(View v) throws InterruptedException {
@@ -107,9 +105,8 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        setContentView(R.layout.currency_menu_activity);
-
+        setContentView(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ?
+                       R.layout.currency_menu_activity : R.layout.currency_menu_activity_landscape);
         recyclerViewSet();
 
         textView = (TextView)findViewById(R.id.textView);
@@ -189,5 +186,15 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         super.onResume();
         if (task.isCancelled())
             loadInformation();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+            setContentView(R.layout.currency_menu_activity_landscape);
+        else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
+            setContentView((R.layout.currency_menu_activity));
     }
 }

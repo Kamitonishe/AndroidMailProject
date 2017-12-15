@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".activities.mainActivity.MainActivity">
+        <activity android:name=".activities.mainActivity.MainActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         </activity>
 
         <activity android:name=".activities.startActivity.StartActivity">
@@ -25,7 +26,8 @@
         </activity>
 
         <activity android:name=".activities.currencyMenuActivity.CurrencyMenuActivity"
-            android:parentActivityName=".activities.mainActivity.MainActivity">
+            android:parentActivityName=".activities.mainActivity.MainActivity"
+            android:theme="@style/Theme.AppCompat.DayNight">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.mainActivity.MainActivity"/>

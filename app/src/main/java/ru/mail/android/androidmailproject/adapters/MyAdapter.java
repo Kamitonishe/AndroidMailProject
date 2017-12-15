@@ -24,6 +24,7 @@ import ru.mail.android.androidmailproject.activities.mainActivity.MainActivity;
 import ru.mail.android.androidmailproject.R;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 import ru.mail.android.androidmailproject.data.ImagesSingltone;
+import ru.mail.android.androidmailproject.data.SuperSingltone;
 import ru.mail.android.androidmailproject.sql.DBHelper;
 
 
@@ -54,7 +55,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     public MyAdapter(Context context) {
-        Pair<String, Integer>[] currencies = CurrenciesSingletone.getInstance().getCurrenciesNamesAndStates();
+        Pair<String, Integer>[] currencies = CurrenciesSingletone.getInstance().getCurrenciesNamesAndStates
+                (context instanceof MainActivity ? SuperSingltone.getInstance().isOnlyFavorites() : SuperSingltone.getInstance().isCompareOnlyToFavorites());
         int i = 0;
         this.context = context;
         dbHelper = new DBHelper(context);
@@ -66,6 +68,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             mCurrencyNamesSet[i++] = nameAndState.first;
             this.states.put(nameAndState.first, nameAndState.second);
         }
+
     }
 
     @Override
@@ -80,7 +83,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.textView.setText(mCurrencyNamesSet[position]);
         holder.textView.setTypeface(Typeface.createFromAsset(
-               context.getAssets() , "fonts/libduas.ttf"));
+                context.getAssets(), "fonts/libduas.ttf"));
 
 
         holder.ratingBar.setRating(states.get(mCurrencyNamesSet[position]));
@@ -119,7 +122,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                ((RatingBar)view).setRating(1 - ((RatingBar)view).getRating());
                 states.put(mCurrencyNamesSet[position], (int)(1 - ((RatingBar)view).getRating()));
                 CurrenciesSingletone.getInstance().changeState(mCurrencyNamesSet[position]);
 
@@ -128,10 +130,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     public void run() {
                         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-                        db.execSQL("UPDATE currencies_names SET state = " + (1 - states.get(mCurrencyNamesSet[position])) +
+                        db.execSQL("UPDATE currencies_names SET state = " + states.get(mCurrencyNamesSet[position]) +
                                 " WHERE name = \"" + mCurrencyNamesSet[position] +"\"");
                     }
                 });
+
+                ((RatingBar)view).setRating(1 - ((RatingBar)view).getRating());
             }
             return true;
         }

@@ -76,7 +76,7 @@ public class GraphFragment extends Fragment {
                         cal.get(Calendar.MONTH),
                         cal.get(Calendar.DAY_OF_MONTH));
                 datePicker.getDatePicker().setMaxDate(cal.getTime().getTime());
-                cal.set(1990, 11, 1);
+                cal.set(2000, 0, 1);
                 datePicker.setCancelable(true);
                 datePicker.getDatePicker().setMinDate(cal.getTime().getTime());
                 datePicker.show();

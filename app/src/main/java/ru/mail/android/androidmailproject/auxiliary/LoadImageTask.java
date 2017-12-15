@@ -62,7 +62,7 @@ public class LoadImageTask extends AsyncTask<Void, Void, Bitmap> {
     }
 
     private static String getUrlFromIndex(int index) {
-        String name = CurrenciesSingletone.getInstance().getCurrenciesNames()[index];
+        String name = CurrenciesSingletone.getInstance().getCurrenciesNames(false)[index];
         return "icons/" + name.toLowerCase() + ".gif";
     }
 
@@ -95,7 +95,7 @@ public class LoadImageTask extends AsyncTask<Void, Void, Bitmap> {
     }
 
     public String getName() {
-        return CurrenciesSingletone.getInstance().getCurrenciesNames()[index];
+        return CurrenciesSingletone.getInstance().getCurrenciesNames(false)[index];
     }
 
 

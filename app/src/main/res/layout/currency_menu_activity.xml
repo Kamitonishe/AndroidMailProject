@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="270dp"
         android:layout_alignParentRight="true"
+        android:visibility="gone"
         android:id="@+id/textViewHelp"
         android:gravity="center"
         />
@@ -56,10 +57,5 @@
             </android.support.v7.widget.RecyclerView>
         </FrameLayout>
     </LinearLayout>
-
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:navigationIcon="@mipmap/icon" />
 
     </LinearLayout>

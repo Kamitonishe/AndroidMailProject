@@ -57,15 +57,16 @@ public class ImagesSingltone {
 
 
     public Bitmap getBitmapFromMemCache(int position) {
-        String name = CurrenciesSingletone.getInstance().getCurrenciesNames()[position];
+        String name = CurrenciesSingletone.getInstance().getCurrenciesNames(false)[position];
         return memoryCache.get(name);
     }
 
     public void addBitmapToMemoryCache(int position, Bitmap bitmap) {
-        String name = CurrenciesSingletone.getInstance().getCurrenciesNames()[position];
+        String name = CurrenciesSingletone.getInstance().getCurrenciesNames(false)[position];
 
         if (bitmap != null)
-            memoryCache.put(name, ImageManager.addBorder(ImageManager.makeTransparentBackground(bitmap)));
+            memoryCache.put(name, ImageManager.addBorder(ImageManager.makeTransparentBackground(
+                    ImageManager.makeTransparentBackground(bitmap))));
         else {
             int resourceId = context.getResources().getIdentifier(name.toLowerCase(), "drawable", context.getPackageName());
             if (resourceId == 0)
@@ -77,7 +78,7 @@ public class ImagesSingltone {
                         ((BitmapDrawable) context.getResources().getDrawable(resourceId, context.getTheme())).getBitmap()))));
             } else
                 memoryCache.put(name, ImageManager.addBorder(ImageManager.makeTransparentBackground(ImageManager.fromBlackToGray(
-                        ((BitmapDrawable) context.getResources().getDrawable(R.drawable.inr)).getBitmap()))));
+                        ((BitmapDrawable) context.getResources().getDrawable(resourceId)).getBitmap()))));
         }
     }
 

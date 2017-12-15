@@ -20,6 +20,8 @@ import ru.mail.android.androidmailproject.activities.mainActivity.MainActivity;
 import ru.mail.android.androidmailproject.R;
 import ru.mail.android.androidmailproject.auxiliary.NetworkManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
+import ru.mail.android.androidmailproject.data.ImagesSingltone;
+import ru.mail.android.androidmailproject.data.SuperSingltone;
 import ru.mail.android.androidmailproject.sql.DBHelper;
 
 /**
@@ -60,6 +62,40 @@ public class StartActivity extends AppCompatActivity {
     }
 
     void tryToCallMainActivity() {
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
+                SQLiteDatabase db = helper.getReadableDatabase();
+                Cursor cursor = db.rawQuery("SELECT count(*) FROM picture", null);
+                cursor.moveToFirst();
+                if (cursor.getInt(0) == 0)
+                    SuperSingltone.getInstance().setPicture("sea");
+                else {
+                    cursor = db.rawQuery("SELECT * FROM picture", null);
+                    cursor.moveToFirst();
+                    SuperSingltone.getInstance().setPicture(cursor.getString(0));
+                }
+            }
+        });
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
+                SQLiteDatabase db = helper.getWritableDatabase();
+                Cursor cursor = db.rawQuery("SELECT count(*) FROM whichCurrencies", null);
+                cursor.moveToFirst();
+                if (cursor.getInt(0) == 0) {
+                    SuperSingltone.getInstance().setCompareOnlyToFavorites(false);
+                    SuperSingltone.getInstance().setOnlyFavorites(false);
+                }
+                else {
+                    cursor = db.rawQuery("SELECT * FROM whichCurrencies", null);
+                    cursor.moveToFirst();
+                    SuperSingltone.getInstance().setOnlyFavorites(cursor.getInt(0) == 1);
+                    cursor.moveToNext();
+                    SuperSingltone.getInstance().setCompareOnlyToFavorites(cursor.getInt(0) == 1);
+                }
+            }
+        });
         service.submit(new Runnable() {
             @Override
             public void run() {

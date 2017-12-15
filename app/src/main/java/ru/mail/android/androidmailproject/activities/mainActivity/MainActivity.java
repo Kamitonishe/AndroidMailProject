@@ -3,13 +3,16 @@ package ru.mail.android.androidmailproject.activities.mainActivity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AlertDialogLayout;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +21,9 @@ import android.util.Pair;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -32,38 +37,39 @@ import ru.mail.android.androidmailproject.adapters.MyAdapter;
 import ru.mail.android.androidmailproject.auxiliary.ImageManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 import ru.mail.android.androidmailproject.data.Currency;
+import ru.mail.android.androidmailproject.data.ImagesSingltone;
+import ru.mail.android.androidmailproject.data.SuperSingltone;
 import ru.mail.android.androidmailproject.sql.DBHelper;
 
 public class MainActivity extends AppCompatActivity {
-    private RecyclerView recycleView;
     private DBHelper dbHelper;
-    private FloatingActionButton options;
-    private String toolbarImageName;
 
     protected void recyclerViewSet() {
-        recycleView = (RecyclerView) findViewById(R.id.recycler);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recycleView.setLayoutManager(linearLayoutManager);
-        MyAdapter recyclerAdapter = new MyAdapter(this);
-        recycleView.setAdapter(recyclerAdapter);
-
+        RecyclerView recycleView = (RecyclerView) findViewById(R.id.recycler);
+        recycleView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recycleView.setAdapter(new MyAdapter(this));
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+        setToolbarImage(SuperSingltone.getInstance().getPicture());
 
         dbHelper = new DBHelper(getApplicationContext());
-        options = (FloatingActionButton) findViewById(R.id.options_fb);
         final Context context = this;
 
-        options.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.options_fb).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SuperSingltone.getInstance().setOptionsDialogIsCalled(true);
                 final AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 LayoutInflater factory = LayoutInflater.from(MainActivity.this);
                 final View v = factory.inflate(R.layout.options_dialog_layout, null);
+                ((AppCompatCheckBox)v.findViewById(R.id.onlyFavoritesCB)).setChecked(SuperSingltone.getInstance().isOnlyFavorites());
+                ((AppCompatCheckBox)v.findViewById(R.id.compareOnlyToFavoritesCB)).setChecked(SuperSingltone.getInstance().isCompareOnlyToFavorites());
+
                 builder.setView(v);
                 builder.setTitle("Options");
 
@@ -74,12 +80,16 @@ public class MainActivity extends AppCompatActivity {
                         Spinner pictureSpinner = v.findViewById(R.id.picture_spinner);
                         String[] array = getResources().getStringArray(R.array.pictures_array);
                         setToolbarImage(array[pictureSpinner.getSelectedItemPosition()]);
+                        SuperSingltone.getInstance().setOptionsDialogIsCalled(false);
+                        SuperSingltone.getInstance().setOnlyFavorites(((AppCompatCheckBox)v.findViewById(R.id.onlyFavoritesCB)).isChecked());
+                        SuperSingltone.getInstance().setCompareOnlyToFavorites(((AppCompatCheckBox)v.findViewById(R.id.compareOnlyToFavoritesCB)).isChecked());
+                        recyclerViewSet();
                     }
                 });
                 builder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        SuperSingltone.getInstance().setOptionsDialogIsCalled(false);
                     }
                 });
 
@@ -91,6 +101,22 @@ public class MainActivity extends AppCompatActivity {
                         R.array.pictures_array, android.R.layout.simple_spinner_item);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 pictureSpinner.setAdapter(adapter);
+                String tmp = SuperSingltone.getInstance().getPicture();
+                pictureSpinner.setSelection(adapter.getPosition(tmp.substring(0, 1).toUpperCase() + tmp.substring(1).toLowerCase()));
+
+                Button wipeData = dialog.findViewById(R.id.wipeButton);
+                wipeData.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                                db.execSQL("DELETE FROM currencies_rates WHERE rowid >= 0");
+                            }
+                        }).start();
+                    }
+                });
 
                 builder.setItems(R.array.pictures_array, new DialogInterface.OnClickListener() {
                     @Override
@@ -102,6 +128,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         recyclerViewSet();
+
+        if (SuperSingltone.getInstance().isOptionsDialogCalled())
+            findViewById(R.id.options_fb).callOnClick();
     }
 
     public void startCurrencyMenuActivity(String currency) {
@@ -118,7 +147,24 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        for (final Pair<String, Integer> nameAndState : CurrenciesSingletone.getInstance().getCurrenciesNamesAndStates())
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                db.execSQL("INSERT OR REPLACE INTO whichCurrencies(rowid, only) VALUES(0, " + (SuperSingltone.getInstance().isOnlyFavorites() ? 1 : 0) + ")");
+                db.execSQL("INSERT OR REPLACE INTO whichCurrencies(rowid, only) VALUES(1, " + (SuperSingltone.getInstance().isCompareOnlyToFavorites() ? 1 : 0) + ")");
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                db.execSQL("INSERT OR REPLACE INTO picture(rowid, name) VALUES(0, \"" + SuperSingltone.getInstance().getPicture().toLowerCase() + "\")");
+            }
+        }).start();
+
+        for (final Pair<String, Integer> nameAndState : CurrenciesSingletone.getInstance().getCurrenciesNamesAndStates(false))
             if (nameAndState.second == 1)
                 new Thread(new Runnable() {
                     @Override
@@ -126,7 +172,11 @@ public class MainActivity extends AppCompatActivity {
                         SQLiteDatabase db = dbHelper.getWritableDatabase();
                         Map<Pair<String, String>, Float> cur = CurrenciesSingletone.getInstance().getCurrencyRates(nameAndState.first).getRates();
                         for (Map.Entry<Pair<String, String>, Float> entry : cur.entrySet()) {
-                            db.execSQL("INSERT OR REPLACE INTO currencies_rates(base, date, toCompare, rate) VALUES(\"" +
+
+                            String rowid = "(SELECT rowid FROM currencies_rates WHERE base = \"" + nameAndState.first + "\" and date = \"" +
+                                entry.getKey().first + "\" and toCompare = \"" + entry.getKey().second + "\")";
+
+                            db.execSQL("INSERT OR REPLACE INTO currencies_rates(rowid, base, date, toCompare, rate) VALUES(" + rowid +", \"" +
                                     nameAndState.first + "\", \"" + entry.getKey().first + "\", \"" + entry.getKey().second + "\", " +
                                     String.valueOf(entry.getValue()) + ")");
                         }
@@ -139,5 +189,6 @@ public class MainActivity extends AppCompatActivity {
         int resourceId = getResources().getIdentifier(name.toLowerCase(), "drawable", getPackageName());
         ImageView image = (ImageView) findViewById(R.id.toolbarImage);
         image.setImageResource(resourceId);
+        SuperSingltone.getInstance().setPicture(name);
     }
 }

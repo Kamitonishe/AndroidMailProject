@@ -6,26 +6,57 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="30dp"
+        android:layout_height="50dp"
         android:layout_gravity="center">
 
         <TextView
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
             android:text="Picture: "
             android:gravity="center"/>
 
         <Spinner
             android:id="@+id/picture_spinner"
             android:layout_width="fill_parent"
-            android:layout_height="30dp" />
+            android:layout_height="50dp" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="Only favorites"
+            android:gravity="center"/>
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/onlyFavoritesCB"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="Compare only to favorites"
+            android:gravity="center"/>
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/compareOnlyToFavoritesCB"/>
     </LinearLayout>
 
     <Button
         android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:text="Wipe data"/>
-
-
+        android:layout_height="50dp"
+        android:text="Wipe data"
+        android:id="@+id/wipeButton"/>
 </LinearLayout>
