@@ -2,5 +2,6 @@
     <string name="app_name">Exchange Rates</string>
     <string name="current_time">currentTime</string>
     <string name="change">Change</string>
+    <string name="kurs">Exchange</string>
 
 </resources>
