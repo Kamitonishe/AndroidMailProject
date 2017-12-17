@@ -1,16 +1,22 @@
 package ru.mail.android.androidmailproject.activities.mainActivity;
 
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.AlertDialogLayout;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,6 +48,7 @@ import ru.mail.android.androidmailproject.data.SuperSingltone;
 import ru.mail.android.androidmailproject.sql.DBHelper;
 
 public class MainActivity extends AppCompatActivity {
+    public static final int NOTIFY_ID = 101;
     private DBHelper dbHelper;
 
     protected void recyclerViewSet() {
@@ -59,6 +66,11 @@ public class MainActivity extends AppCompatActivity {
 
         dbHelper = new DBHelper(getApplicationContext());
         final Context context = this;
+
+
+
+
+
 
         findViewById(R.id.options_fb).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +143,29 @@ public class MainActivity extends AppCompatActivity {
 
         if (SuperSingltone.getInstance().isOptionsDialogCalled())
             findViewById(R.id.options_fb).callOnClick();
+
+        final int NOTIFICATION_ID = 1;
+
+        PendingIntent activityPendingIntent = getActivityPendingIntent();
+
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle("Избранные курсы")
+                .setContentText("eg")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(activityPendingIntent)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setCategory(Notification.CATEGORY_STATUS)
+                .build();
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(NOTIFICATION_ID, notification);
+    }
+
+    private PendingIntent getActivityPendingIntent() {
+        Intent activityIntent = new Intent(this, MainActivity.class);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        return PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     public void startCurrencyMenuActivity(String currency) {

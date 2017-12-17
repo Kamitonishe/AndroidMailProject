@@ -1,7 +1,13 @@
 package ru.mail.android.androidmailproject.adapters;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -103,6 +109,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         @Override
         public void onClick(View view) {
+
+
+
             if (context instanceof MainActivity)
                 ((MainActivity) context).startCurrencyMenuActivity(mCurrencyNamesSet[position]);
             else if (context instanceof CurrencyMenuActivity)
