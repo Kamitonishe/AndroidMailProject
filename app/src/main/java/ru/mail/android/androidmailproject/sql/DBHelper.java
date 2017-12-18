@@ -11,14 +11,18 @@ import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context) {
-        super(context, "database", null, 1);
+        super(context, "database0", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // создаем таблицу с полями
         db.execSQL("create table currencies_names ("
                 + "name text, state integer);");
+        db.execSQL(
+                "CREATE TABLE currencies_rates (" +
+                "base text, date text, toCompare text, rate float);");
+        db.execSQL("CREATE TABLE picture (name text);");
+        db.execSQL("CREATE TABLE whichCurrencies (only integer);");
     }
 
     @Override

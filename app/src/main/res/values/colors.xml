@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="indigo">#4B0082</color>
+    <color name="compoundOrange">#CC4A14</color>
+    <color name="compoundBroun">#99583D</color>
+    <color name="compoundRed">#FF0000</color>
+    <color name="compoundGreenLight">#40FF40</color>
+    <color name="compoundGreenDark">#54CC14</color>
+    <color name="ping">#fedaf3</color>
 </resources>
