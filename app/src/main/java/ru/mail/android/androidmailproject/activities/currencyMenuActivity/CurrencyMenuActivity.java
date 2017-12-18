@@ -1,11 +1,16 @@
 package ru.mail.android.androidmailproject.activities.currencyMenuActivity;
 
 import android.app.FragmentTransaction;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -17,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import ru.mail.android.androidmailproject.activities.mainActivity.MainActivity;
 import ru.mail.android.androidmailproject.auxiliary.AnimationManager;
 import ru.mail.android.androidmailproject.auxiliary.CurrencyManager;
 import ru.mail.android.androidmailproject.auxiliary.JSONTask;
@@ -128,8 +134,32 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         fTrans = getFragmentManager().beginTransaction();
         fTrans.add(R.id.fragmentsFrame, chooseFragment);
         fTrans.commit();
-    }
 
+
+        final int NOTIFICATION_ID = 1;
+
+        PendingIntent activityPendingIntent = getActivityPendingIntent();
+
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle("Базовый курс")
+                .setContentText(baseCurrencyName)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(activityPendingIntent)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setCategory(Notification.CATEGORY_STATUS)
+                .build();
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(NOTIFICATION_ID, notification);
+
+
+    }
+    private PendingIntent getActivityPendingIntent() {
+        Intent activityIntent = new Intent(this, MainActivity.class);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        return PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
     private void loadInformation() {
         ArrayList<String> params = new ArrayList<>();
 
