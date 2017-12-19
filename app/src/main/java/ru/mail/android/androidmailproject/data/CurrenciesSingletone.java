@@ -1,9 +1,16 @@
 package ru.mail.android.androidmailproject.data;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.util.Pair;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -12,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
+import ru.mail.android.androidmailproject.auxiliary.CurrencyManager;
 import ru.mail.android.androidmailproject.auxiliary.DateManager;
 
 /**.
@@ -20,11 +28,13 @@ import ru.mail.android.androidmailproject.auxiliary.DateManager;
 
 public class CurrenciesSingletone {
     private static CurrenciesSingletone instance;
+    private Context context;
 
     List<CurrenciesListener> listeners = new ArrayList<>();
 
     private Map<String, Currency> rated_currencies, other_currencies;
     private Map<String, String> latestFeaturedDate;
+    private Map<String, String> currency_info;
 
     private String latest = "";
 
@@ -42,7 +52,57 @@ public class CurrenciesSingletone {
         latestFeaturedDate = new HashMap<>();
         rated_currencies = new HashMap<>();
         other_currencies = new HashMap<>();
+        currency_info = new HashMap<>();
     }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+
+    private String loadJSON() {
+        String json = null;
+        try {
+            InputStream is = context.getAssets().open("json/currency_info.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+
+    public void loadCurrencyInfo() {
+        try {
+            JSONObject obj = new JSONObject(loadJSON());
+            JSONArray m_jArry = obj.getJSONArray("currencies");
+
+            for (int i = 0; i < m_jArry.length(); i++) {
+                JSONObject jo_inside = m_jArry.getJSONObject(i);
+                String name = jo_inside.getString("name");
+                String full_name = jo_inside.getString("full_name");
+                String full_russian_name = jo_inside.getString("full_russian_name");
+                JSONArray countries_ = jo_inside.getJSONArray("countries");
+
+                String[] countries = new String[countries_.length()];
+                for (int j = 0 ; j < countries_.length(); ++j)
+                    countries[j] = countries_.getString(j);
+
+                currency_info.put(name, (new CurrencyManager(name, full_name, full_russian_name, countries).getFormat()));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getCurrencyInfo(String name) {
+        return currency_info.get(name);
+    }
+
 
     public void addCurrency(Currencies currencies, boolean isLatest) {
         synchronized (CurrenciesSingletone.class) {

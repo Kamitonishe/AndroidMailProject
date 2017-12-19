@@ -1,0 +1,21 @@
+{
+  "currencies": [
+    {
+      "name": "EUR",
+      "full_name": "Euro",
+      "full_russian_name": "Евро",
+      "countries": [
+        "Italy",
+        "France"
+      ]
+    },
+    {
+      "name": "RUB",
+      "full_name": "Ruble",
+      "full_russian_name": "Российский рубль",
+      "countries": [
+        "Russia"
+      ]
+    }
+  ]
+}

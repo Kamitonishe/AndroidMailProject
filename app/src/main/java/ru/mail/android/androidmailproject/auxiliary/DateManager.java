@@ -41,6 +41,8 @@ public class DateManager {
 
     public static String addZeros(String date) {
         String[] splited = date.split("-");
+        if (splited[1].length() == 0)
+            splited[1] = "00";
         if (splited[1].length() == 1)
             splited[1] = "0" + splited[1];
         if (splited[2].length() == 1)

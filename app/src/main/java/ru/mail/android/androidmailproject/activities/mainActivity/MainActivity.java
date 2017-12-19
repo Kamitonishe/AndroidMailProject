@@ -9,7 +9,10 @@ import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.ActionBar;
@@ -66,9 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
         dbHelper = new DBHelper(getApplicationContext());
         final Context context = this;
-
-
-
 
 
 

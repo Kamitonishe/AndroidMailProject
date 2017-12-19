@@ -36,11 +36,16 @@ public class JSONTask extends AsyncTask<String, String, Currencies[]>  {
             base = params[2 * i];
             date = params[2 * i + 1];
             String json = fromJSONtoString(URL_HIT + date + "?base=" + base);
-            result[i] = getCurrencies(json);
-            if (!date.equals("latest"))
-                result[i].setDate(date);
-            result[i].getRates().put(base, (float)1);
-            CurrenciesSingletone.getInstance().addCurrency(result[i], date.equals("latest"));
+            for (int tryNumber = 0; tryNumber < 5; ++tryNumber) {
+                result[i] = getCurrencies(json);
+                if (result[i] != null) {
+                    if (!date.equals("latest"))
+                        result[i].setDate(date);
+                    result[i].getRates().put(base, (float) 1);
+                    CurrenciesSingletone.getInstance().addCurrency(result[i], date.equals("latest"));
+                    break;
+                }
+            }
         }
         return result;
     }

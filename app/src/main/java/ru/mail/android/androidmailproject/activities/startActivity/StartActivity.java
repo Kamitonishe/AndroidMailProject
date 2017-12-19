@@ -65,6 +65,13 @@ public class StartActivity extends AppCompatActivity {
         service.submit(new Runnable() {
             @Override
             public void run() {
+                CurrenciesSingletone.getInstance().setContext(getApplicationContext());
+                CurrenciesSingletone.getInstance().loadCurrencyInfo();
+            }
+        });
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
                 SQLiteDatabase db = helper.getReadableDatabase();
                 Cursor cursor = db.rawQuery("SELECT count(*) FROM picture", null);
                 cursor.moveToFirst();

@@ -56,7 +56,7 @@ public class GraphFragment extends Fragment {
     final DatePickerDialog.OnDateSetListener datePickerListener=new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            String lastDate = String.valueOf(year) + "-" + String.valueOf(monthOfYear) + "-" + String.valueOf(dayOfMonth);
+            String lastDate = String.valueOf(year) + "-" + String.valueOf(monthOfYear + 1) + "-" + String.valueOf(dayOfMonth);
             ((CurrencyMenuActivity)getActivity()).showComparisionWithAnotherCurrency(currencyToCompare, DateManager.addZeros(lastDate));
         }
     };

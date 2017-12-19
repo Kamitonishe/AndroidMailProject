@@ -13,14 +13,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import ru.mail.android.androidmailproject.activities.mainActivity.MainActivity;
 import ru.mail.android.androidmailproject.auxiliary.AnimationManager;
@@ -32,6 +44,7 @@ import ru.mail.android.androidmailproject.adapters.MyAdapter;
 import ru.mail.android.androidmailproject.auxiliary.NetworkManager;
 import ru.mail.android.androidmailproject.auxiliary.DateManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
+import ru.mail.android.androidmailproject.data.SuperSingltone;
 
 /**
  * Created by dmitrykamaldinov on 10/31/17.
@@ -44,6 +57,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
 
     private String baseCurrencyName;
     private String currencyToCompare = "EUR";
+
     String lastDate;
 
     private GraphFragment graphFragment;
@@ -106,6 +120,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
 
     JSONTaskForCurrencyMenu task;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,7 +142,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         textView.setText(baseCurrencyName);
         textView.setTypeface(Typeface.createFromAsset(
                 getAssets(), "fonts/libduas.ttf"));
-        textViewHelp.setText(CurrencyManager.getCurrencyInformation(baseCurrencyName));
+        textViewHelp.setText(CurrenciesSingletone.getInstance().getCurrencyInfo(baseCurrencyName));
 
         task = new JSONTaskForCurrencyMenu();
 
@@ -184,7 +199,8 @@ public class CurrencyMenuActivity extends AppCompatActivity {
     public void showComparisionWithAnotherCurrency(String currency, String lastDate) {
 
         currencyToCompare = currency;
-        this.lastDate = lastDate;
+        if (lastDate != null)
+            this.lastDate = lastDate;
 
         Bundle toGraphFragment = new Bundle();
         toGraphFragment.putString("base_currency", baseCurrencyName);
