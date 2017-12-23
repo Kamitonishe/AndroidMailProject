@@ -167,13 +167,6 @@ public class StartActivity extends AppCompatActivity {
         ftrans.add(R.id.fragmentsFrameStart, progressBarFragment);
         ftrans.commit();
 
-
-        //service.submit(new Runnable() {
-        //  @Override
-        //  public void run() {
-
-        //  }
-        ///    });
         tryToCallMainActivity();
     }
 

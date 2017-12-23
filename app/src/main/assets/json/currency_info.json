@@ -5,16 +5,82 @@
       "full_name": "Euro",
       "full_russian_name": "Евро",
       "countries": [
-        "Italy",
-        "France"
+        "Австрия",
+        "Бельгия",
+        "Германия",
+        "Греция",
+        "Ирландия",
+        "Испания",
+        "Италия",
+        "Кипр",
+        "Латвия",
+        "Литва",
+        "Люксембург",
+        "Мальта",
+        "Нидерланды",
+        "Португалия",
+        "Словакия",
+        "Словения",
+        "Финляндия",
+        "Франция",
+        "Эстония"
       ]
     },
     {
       "name": "RUB",
-      "full_name": "Ruble",
+      "full_name": "Russian ruble",
       "full_russian_name": "Российский рубль",
       "countries": [
-        "Russia"
+        "Россия"
+      ]
+    },
+    {
+      "name": "USD",
+      "full_name": "United States dollar",
+      "full_russian_name": "Доллар США",
+      "countries": [
+        "США",
+        "Панама",
+        "Эквадор",
+        "Пуэрто-Рика",
+        "Зимбабве",
+        "Сальвадор"
+      ]
+    },
+    {
+      "name": "CHF",
+      "full_name": "Swiss franc",
+      "full_russian_name": "Швейцарский франк",
+      "countries": [
+        "Швейцария",
+        "Лихтенштейн",
+        "Кампионе-д'Италия"
+      ]
+    },
+    {
+      "name": "HRK",
+      "full_name": "Croatian Kuna",
+      "full_russian_name": "Хорватская куна",
+      "countries": [
+        "Хорватия"
+      ]
+    },
+    {
+      "name": "MXN",
+      "full_name": "Mexican peso",
+      "full_russian_name": "Мексиканское песо",
+      "countries": [
+        "Мексика"
+      ]
+    },
+    {
+      "name": "ZAR",
+      "full_name": "South Africa Rand",
+      "full_russian_name": "Южноафриканский рэнд",
+      "countries": [
+        "ЮАР",
+        "Намибия",
+        "Лесото"
       ]
     }
   ]

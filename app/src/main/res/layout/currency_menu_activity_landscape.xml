@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/textViewHelp"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:visibility="gone"
         />
 
@@ -31,10 +31,10 @@
             android:id="@+id/fragmentsFrame">
         </FrameLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <ru.mail.android.androidmailproject.auxiliary.CustomRecyclerView
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:id="@+id/recycler1">
-        </android.support.v7.widget.RecyclerView>
+        </ru.mail.android.androidmailproject.auxiliary.CustomRecyclerView>
     </LinearLayout>
 </LinearLayout>

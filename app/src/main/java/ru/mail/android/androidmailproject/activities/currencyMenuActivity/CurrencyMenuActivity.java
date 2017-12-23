@@ -37,6 +37,7 @@ import java.util.Map;
 import ru.mail.android.androidmailproject.activities.mainActivity.MainActivity;
 import ru.mail.android.androidmailproject.auxiliary.AnimationManager;
 import ru.mail.android.androidmailproject.auxiliary.CurrencyManager;
+import ru.mail.android.androidmailproject.auxiliary.CustomRecyclerView;
 import ru.mail.android.androidmailproject.auxiliary.JSONTask;
 import ru.mail.android.androidmailproject.JsonModels.Currencies;
 import ru.mail.android.androidmailproject.R;
@@ -66,7 +67,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
     FragmentTransaction fTrans;
 
     protected void recyclerViewSet() {
-        RecyclerView recycleView = (RecyclerView) findViewById(R.id.recycler1);
+        CustomRecyclerView recycleView = (CustomRecyclerView) findViewById(R.id.recycler1);
         recycleView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recycleView.setAdapter(new MyAdapter(CurrencyMenuActivity.this));
     }

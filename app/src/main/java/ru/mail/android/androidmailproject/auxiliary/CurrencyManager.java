@@ -8,10 +8,12 @@ public class CurrencyManager {
     private String format;
 
     public CurrencyManager(String name, String full_name, String russian_name, String[] countries) {
-        format = name + "\n\n" + "Full name: " + full_name + "\n" +
-                "Russian name: " + russian_name + "\nUsed in countries:\n\t";
+        format = "\tFull name: " + full_name + "\n" +
+                "\tRussian name: " + russian_name + "\n\n\tUsed in countries:\n\t";
         for (String country : countries)
             format += country + ", ";
+        if (countries.length > 0)
+            format = format.substring(0, format.length() - 2);
     }
 
     public String getFormat() {

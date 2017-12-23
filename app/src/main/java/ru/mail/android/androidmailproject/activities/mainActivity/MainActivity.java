@@ -43,6 +43,7 @@ import java.util.Map;
 import ru.mail.android.androidmailproject.activities.currencyMenuActivity.CurrencyMenuActivity;
 import ru.mail.android.androidmailproject.R;
 import ru.mail.android.androidmailproject.adapters.MyAdapter;
+import ru.mail.android.androidmailproject.auxiliary.CustomRecyclerView;
 import ru.mail.android.androidmailproject.auxiliary.ImageManager;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 import ru.mail.android.androidmailproject.data.Currency;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private DBHelper dbHelper;
 
     protected void recyclerViewSet() {
-        RecyclerView recycleView = (RecyclerView) findViewById(R.id.recycler);
+        CustomRecyclerView recycleView = (CustomRecyclerView) findViewById(R.id.recycler);
         recycleView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recycleView.setAdapter(new MyAdapter(this));
     }
