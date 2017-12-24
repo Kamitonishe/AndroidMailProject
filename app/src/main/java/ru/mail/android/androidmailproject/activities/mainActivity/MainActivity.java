@@ -28,6 +28,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Layout;
 import android.util.Pair;
 import android.content.Intent;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -77,14 +78,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 SuperSingltone.getInstance().setOptionsDialogIsCalled(true);
-                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.CustomDialogTheme);
                 LayoutInflater factory = LayoutInflater.from(MainActivity.this);
                 final View v = factory.inflate(R.layout.options_dialog_layout, null);
                 ((AppCompatCheckBox)v.findViewById(R.id.onlyFavoritesCB)).setChecked(SuperSingltone.getInstance().isOnlyFavorites());
                 ((AppCompatCheckBox)v.findViewById(R.id.compareOnlyToFavoritesCB)).setChecked(SuperSingltone.getInstance().isCompareOnlyToFavorites());
 
                 builder.setView(v);
-                builder.setTitle("Options");
+                //builder.setTitle("Options");
 
                 builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -106,10 +107,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                Dialog dialog = builder.create();
+                AlertDialog dialog = builder.create();
                 dialog.show();
+                dialog.setTitle("OPTIONS");
 
-                final Spinner pictureSpinner = dialog.findViewById(R.id.picture_spinner);
+                final Spinner pictureSpinner = (Spinner)dialog.findViewById(R.id.picture_spinner);
                 ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
                         R.array.pictures_array, android.R.layout.simple_spinner_item);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -117,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 String tmp = SuperSingltone.getInstance().getPicture();
                 pictureSpinner.setSelection(adapter.getPosition(tmp.substring(0, 1).toUpperCase() + tmp.substring(1).toLowerCase()));
 
-                Button wipeData = dialog.findViewById(R.id.wipeButton);
+                Button wipeData = (Button) dialog.findViewById(R.id.wipeButton);
                 wipeData.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

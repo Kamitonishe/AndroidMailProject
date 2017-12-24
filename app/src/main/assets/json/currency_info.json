@@ -4,6 +4,7 @@
       "name": "EUR",
       "full_name": "Euro",
       "full_russian_name": "Евро",
+      "part100": "евроцент",
       "countries": [
         "Австрия",
         "Бельгия",
@@ -30,6 +31,7 @@
       "name": "RUB",
       "full_name": "Russian ruble",
       "full_russian_name": "Российский рубль",
+      "part100": "копейка",
       "countries": [
         "Россия"
       ]
@@ -38,6 +40,7 @@
       "name": "USD",
       "full_name": "United States dollar",
       "full_russian_name": "Доллар США",
+      "part100": "цент",
       "countries": [
         "США",
         "Панама",
@@ -51,6 +54,7 @@
       "name": "CHF",
       "full_name": "Swiss franc",
       "full_russian_name": "Швейцарский франк",
+      "part100": "сантим/рапен/чентезимо",
       "countries": [
         "Швейцария",
         "Лихтенштейн",
@@ -59,8 +63,9 @@
     },
     {
       "name": "HRK",
-      "full_name": "Croatian Kuna",
+      "full_name": "Croatian kuna",
       "full_russian_name": "Хорватская куна",
+      "part100": "липа",
       "countries": [
         "Хорватия"
       ]
@@ -69,18 +74,257 @@
       "name": "MXN",
       "full_name": "Mexican peso",
       "full_russian_name": "Мексиканское песо",
+      "part100": "сентаво",
       "countries": [
         "Мексика"
       ]
     },
     {
       "name": "ZAR",
-      "full_name": "South Africa Rand",
+      "full_name": "South Africa rand",
       "full_russian_name": "Южноафриканский рэнд",
+      "part100": "цент",
       "countries": [
         "ЮАР",
         "Намибия",
         "Лесото"
+      ]
+    },
+    {
+      "name": "INR",
+      "full_name": "Indian rupee",
+      "full_russian_name": "Индийская рупия",
+      "part100": "пайса",
+      "countries": [
+        "Индия"
+      ]
+    },
+    {
+      "name": "CNY",
+      "full_name": "Chianese yuan",
+      "full_russian_name": "Китайский юань",
+      "part100": "фэнь",
+      "countries": [
+        "КНР"
+      ]
+    },
+    {
+      "name": "THB",
+      "full_name": "Thai baht",
+      "full_russian_name": "Тайский бат",
+      "part100": "сатанг",
+      "countries": [
+        "Тайланд"
+      ]
+    },
+    {
+      "name": "AUD",
+      "full_name": "Australian dollar",
+      "full_russian_name": "Австралийский доллар",
+      "part100": "цент",
+      "countries": [
+        "Австралия",
+        "Кирибати",
+        "Науру",
+        "Тувалу"
+      ]
+    },
+    {
+      "name": "ILS",
+      "full_name": "Israeli shekel",
+      "full_russian_name": "Новый израильский шекель",
+      "part100": "агора",
+      "countries": [
+        "Израиль",
+        "Государство Палестина"
+      ]
+    },
+    {
+      "name": "KRW",
+      "full_name": "South Korean won",
+      "full_russian_name": "Южнокорейская вона",
+      "part100": "чон",
+      "countries": [
+        "Республика Корея"
+      ]
+    },
+    {
+      "name": "JPY",
+      "full_name": "Japanese yen",
+      "full_russian_name": "Йена",
+      "part100": "сен",
+      "countries": [
+        "Япония"
+      ]
+    },
+    {
+      "name": "PLN",
+      "full_name": "Polish zloty",
+      "full_russian_name": "Польский злотый",
+      "part100": "грош",
+      "countries": [
+        "Польша"
+      ]
+    },
+    {
+      "name": "GBP",
+      "full_name": "British pound",
+      "full_russian_name": "Фунд стерлингов",
+      "part100": "пенни",
+      "countries": [
+        "Великобритания"
+      ]
+    },
+    {
+      "name": "IDR",
+      "full_name": "Indonesian rupeah",
+      "full_russian_name": "Индонезийская рупия",
+      "part100": "сен",
+      "countries": [
+        "Индонезия"
+      ]
+    },
+    {
+      "name": "HUF",
+      "full_name": "Hungarian forint",
+      "full_russian_name": "Венгерский форинт",
+      "part100": "филлер",
+      "countries": [
+        "Венгрия"
+      ]
+    },
+    {
+      "name": "PHP",
+      "full_name": "Philippine peso",
+      "full_russian_name": "Филиппинское песо",
+      "part100": "сентимо",
+      "countries": [
+        "Филиппины"
+      ]
+    },
+    {
+      "name": "TRY",
+      "full_name": "Turkish lira",
+      "full_russian_name": "Турецкая лира",
+      "part100": "куруш",
+      "countries": [
+        "Турция",
+        "Северный Кипр"
+      ]
+    },
+    {
+      "name": "HKD",
+      "full_name": "Hong Kong dollar",
+      "full_russian_name": "Гонконгский доллар",
+      "part100": "цент",
+      "countries": [
+        "Гонконг"
+      ]
+    },
+    {
+      "name": "DKK",
+      "full_name": "Danish krone",
+      "full_russian_name": "Датская крона",
+      "part100": "эре",
+      "countries": [
+        "Дания",
+        "Гренландия",
+        "Фареры"
+      ]
+    },
+    {
+      "name": "CAD",
+      "full_name": "Canadian dollar",
+      "full_russian_name": "Канадский доллар",
+      "part100": "цент",
+      "countries": [
+        "Канада"
+      ]
+    },
+    {
+      "name": "MYR",
+      "full_name": "Malaysian ringgit",
+      "full_russian_name": "Малайзийский ринггит",
+      "part100": "сен",
+      "countries": [
+        "Малайзия"
+      ]
+    },
+    {
+      "name": "BGN",
+      "full_name": "Bulgarian lev",
+      "full_russian_name": "Болгарский лев",
+      "part100": "стотинка",
+      "countries": [
+        "Болгария"
+      ]
+    },
+    {
+      "name": "NOK",
+      "full_name": "Norwegian krone",
+      "full_russian_name": "Норвежская крона",
+      "part100": "эре",
+      "countries": [
+        "Норвегия"
+      ]
+    },
+    {
+      "name": "RON",
+      "full_name": "Romanian leu",
+      "full_russian_name": "Румынский лей",
+      "part100": "бань",
+      "countries": [
+        "Румыния"
+      ]
+    },
+    {
+      "name": "SGD",
+      "full_name": "Singapore dollar",
+      "full_russian_name": "Сингапурский доллар",
+      "part100": "цент",
+      "countries": [
+        "Сингапур",
+        "Бруней"
+      ]
+    },
+    {
+      "name": "CZK",
+      "full_name": "Czech koruna",
+      "full_russian_name": "Чешская крона",
+      "part100": "геллер",
+      "countries": [
+        "Чехия"
+      ]
+    },
+    {
+      "name": "SEK",
+      "full_name": "Swedish krona",
+      "full_russian_name": "Шведская крона",
+      "part100": "эре",
+      "countries": [
+        "Швеция"
+      ]
+    },
+    {
+      "name": "NZD",
+      "full_name": "New Zealand dollar",
+      "full_russian_name": "Новозеландския долар",
+      "part100": "цент",
+      "countries": [
+        "Новая Зеландия",
+        "Ниуэ",
+        "Острова Кука",
+        "Токелау",
+        "Острова Питкэрн"
+      ]
+    },
+    {
+      "name": "BRL",
+      "full_name": "Brazilian real",
+      "full_russian_name": "Бразильский реал",
+      "part100": "сентаво",
+      "countries": [
+        "Бразилия"
       ]
     }
   ]

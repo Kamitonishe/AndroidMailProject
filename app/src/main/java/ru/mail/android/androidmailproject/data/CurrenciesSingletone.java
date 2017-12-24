@@ -86,13 +86,14 @@ public class CurrenciesSingletone {
                 String name = jo_inside.getString("name");
                 String full_name = jo_inside.getString("full_name");
                 String full_russian_name = jo_inside.getString("full_russian_name");
+                String part100 = jo_inside.getString("part100");
                 JSONArray countries_ = jo_inside.getJSONArray("countries");
 
                 String[] countries = new String[countries_.length()];
                 for (int j = 0 ; j < countries_.length(); ++j)
                     countries[j] = countries_.getString(j);
 
-                currency_info.put(name, (new CurrencyManager(name, full_name, full_russian_name, countries).getFormat()));
+                currency_info.put(name, (new CurrencyManager(name, full_name, full_russian_name, part100, countries).getFormat()));
             }
         } catch (JSONException e) {
             e.printStackTrace();

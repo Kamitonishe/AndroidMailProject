@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:alertDialogStyle">@style/CustomDialogTheme</item>
     </style>
     <style name="MyCardViewStyle" parent="Theme.AppCompat.Light">
         <item name="cardCornerRadius">2dp</item>
@@ -21,4 +22,18 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="WindowTitleStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/ping</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">26sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="CustomDialogTheme" parent="@android:style/Theme.Holo.Dialog">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:windowTitleStyle">@style/WindowTitleStyle</item>
+    </style>
+
+
 </resources>
