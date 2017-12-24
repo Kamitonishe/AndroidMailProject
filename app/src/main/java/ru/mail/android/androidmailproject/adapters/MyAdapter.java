@@ -109,9 +109,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         @Override
         public void onClick(View view) {
-
-
-
             if (context instanceof MainActivity)
                 ((MainActivity) context).startCurrencyMenuActivity(mCurrencyNamesSet[position]);
             else if (context instanceof CurrencyMenuActivity)

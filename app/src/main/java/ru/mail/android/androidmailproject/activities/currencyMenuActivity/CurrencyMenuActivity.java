@@ -151,7 +151,7 @@ public class CurrencyMenuActivity extends AppCompatActivity {
         fTrans.add(R.id.fragmentsFrame, chooseFragment);
         fTrans.commit();
 
-
+/*
         final int NOTIFICATION_ID = 1;
 
         PendingIntent activityPendingIntent = getActivityPendingIntent();
@@ -168,14 +168,14 @@ public class CurrencyMenuActivity extends AppCompatActivity {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(NOTIFICATION_ID, notification);
+*/
 
-
-    }
+    }/*
     private PendingIntent getActivityPendingIntent() {
         Intent activityIntent = new Intent(this, MainActivity.class);
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
+    }*/
     private void loadInformation() {
         ArrayList<String> params = new ArrayList<>();
 

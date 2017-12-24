@@ -21,7 +21,7 @@ import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
  */
 
 public class JSONTask extends AsyncTask<String, String, Currencies[]>  {
-    private String date = "2000-01-03", base = "EUR";
+    protected String date = "2000-01-03", base = "EUR";
     private final String URL_HIT = "http://api.fixer.io/";
 
     @Override
@@ -42,7 +42,6 @@ public class JSONTask extends AsyncTask<String, String, Currencies[]>  {
                     if (!date.equals("latest"))
                         result[i].setDate(date);
                     result[i].getRates().put(base, (float) 1);
-                    CurrenciesSingletone.getInstance().addCurrency(result[i], date.equals("latest"));
                     break;
                 }
             }
@@ -53,6 +52,8 @@ public class JSONTask extends AsyncTask<String, String, Currencies[]>  {
     @Override
     protected void onPostExecute(Currencies[] result) {
         super.onPostExecute(result);
+        for (Currencies cur : result)
+            CurrenciesSingletone.getInstance().addCurrency(cur, date.equals("latest"));
     }
 
     public String fromJSONtoString(String urlHit) {

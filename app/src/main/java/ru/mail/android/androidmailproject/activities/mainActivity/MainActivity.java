@@ -1,5 +1,6 @@
 package ru.mail.android.androidmailproject.activities.mainActivity;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -9,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -39,22 +41,29 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
+import ru.mail.android.androidmailproject.JsonModels.Currencies;
 import ru.mail.android.androidmailproject.activities.currencyMenuActivity.CurrencyMenuActivity;
 import ru.mail.android.androidmailproject.R;
 import ru.mail.android.androidmailproject.adapters.MyAdapter;
 import ru.mail.android.androidmailproject.auxiliary.CustomRecyclerView;
 import ru.mail.android.androidmailproject.auxiliary.ImageManager;
+import ru.mail.android.androidmailproject.auxiliary.JSONTask;
 import ru.mail.android.androidmailproject.data.CurrenciesSingletone;
 import ru.mail.android.androidmailproject.data.Currency;
 import ru.mail.android.androidmailproject.data.ImagesSingltone;
 import ru.mail.android.androidmailproject.data.SuperSingltone;
+import ru.mail.android.androidmailproject.notifications.TimeNotification;
 import ru.mail.android.androidmailproject.sql.DBHelper;
 
 public class MainActivity extends AppCompatActivity {
     public static final int NOTIFY_ID = 101;
     private DBHelper dbHelper;
+    private String notificationString;
 
     protected void recyclerViewSet() {
         CustomRecyclerView recycleView = (CustomRecyclerView) findViewById(R.id.recycler);
@@ -65,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         setContentView(R.layout.activity_main);
         setToolbarImage(SuperSingltone.getInstance().getPicture());
@@ -147,6 +157,9 @@ public class MainActivity extends AppCompatActivity {
         if (SuperSingltone.getInstance().isOptionsDialogCalled())
             findViewById(R.id.options_fb).callOnClick();
 
+
+        scheduleNotification();
+/*
         final int NOTIFICATION_ID = 1;
 
         PendingIntent activityPendingIntent = getActivityPendingIntent();
@@ -162,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(NOTIFICATION_ID, notification);
+        notificationManager.notify(NOTIFICATION_ID, notification);*/
     }
 
     private PendingIntent getActivityPendingIntent() {
@@ -229,4 +242,66 @@ public class MainActivity extends AppCompatActivity {
         image.setImageResource(resourceId);
         SuperSingltone.getInstance().setPicture(name);
     }
+
+    private void scheduleNotification() {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        new JSONTaskForNotification().execute("RUB", sdf.format(new Date()));
+
+
+
+    }
+
+    private class JSONTaskForNotification extends JSONTask {
+        @Override
+        protected void onPostExecute(Currencies[] result) {
+            if (!isCancelled()) {
+                notificationString = "";
+                Currency cur = CurrenciesSingletone.getInstance().getCurrencyRates(base);
+                Currencies new_cur = result[0];
+                for (Map.Entry<String, Float> entry : new_cur.getRates().entrySet()) {
+                    String currency = entry.getKey();
+                    if (!currency.equals(base) && CurrenciesSingletone.getInstance().isRated(currency)) {
+                        notificationString += (base + " - " + currency + ": " +
+                                (cur.getLast() == null ? "undefined" :
+                                        cur.getRates().get(new Pair<>(cur.getLast(), currency)) + " (" + cur.getLast() + ") ")
+                                + "->\n             " + entry.getValue() + "(" + new_cur.getDate() + ")\n\n");
+                    }
+                }
+            }
+
+            super.onPostExecute(result);
+
+            Notification notification = new NotificationCompat.Builder(MainActivity.this)
+                    .setContentTitle("Курс валют (RUB)")
+                    .setSmallIcon(R.mipmap.icon)
+                    .setContentIntent(getActivityPendingIntent())
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setCategory(Notification.CATEGORY_STATUS)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(notificationString))
+                    .build();
+
+            Intent notificationIntent = new Intent(MainActivity.this, TimeNotification.class);
+            notificationIntent.putExtra(TimeNotification.NOTIFICATION_ID, 1);
+            notificationIntent.putExtra(TimeNotification.NOTIFICATION, notification);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+
+            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime() + 1000,
+                    1000, pendingIntent);
+
+            /*
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.set(Calendar.HOUR_OF_DAY, 12);
+
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);*/
+        }
+    }
+
 }

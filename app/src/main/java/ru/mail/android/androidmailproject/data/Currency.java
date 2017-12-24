@@ -5,9 +5,12 @@ import android.util.Pair;
 import java.util.HashMap;
 import java.util.Map;
 
+import ru.mail.android.androidmailproject.auxiliary.DateManager;
+
 public class Currency {
     private String name;
     private Integer state;
+    private String last = null;
     private Map<Pair<String, String>, Float> rates;
 
     Currency(String name, Integer state) {
@@ -20,6 +23,8 @@ public class Currency {
     void changeState() {
         state = 1 - state;
     }
+
+    public String getLast() {return last;}
 
     Integer getState() {
         return state;
@@ -34,6 +39,8 @@ public class Currency {
     }
 
     void addRates(String date, Map<String, Float> rates) {
+        if (last == null || DateManager.isLaterThan(date, last))
+            last = date;
         for (Map.Entry<String, Float> entry : rates.entrySet())
             this.rates.put(new Pair<>(date, entry.getKey()), entry.getValue());
     }

@@ -225,4 +225,7 @@ public class CurrenciesSingletone {
         }
     }
 
+    public boolean isRated(String currency) {
+        return rated_currencies.containsKey(currency);
+    }
 }
