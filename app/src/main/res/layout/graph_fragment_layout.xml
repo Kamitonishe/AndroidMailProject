@@ -5,7 +5,7 @@
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
-        android:layout_height="200dip"
+        android:layout_height="190dip"
         android:id="@+id/graph_" />
 
     <LinearLayout
@@ -14,7 +14,7 @@
 
         <TextView
             android:id="@+id/latest_textview"
-            android:layout_width="250dp"
+            android:layout_width="210dp"
             android:layout_height="match_parent" />
 
         <Button
