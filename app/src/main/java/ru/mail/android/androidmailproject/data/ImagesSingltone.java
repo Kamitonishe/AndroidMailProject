@@ -67,19 +67,6 @@ public class ImagesSingltone {
         if (bitmap != null)
             memoryCache.put(name, ImageManager.addBorder(ImageManager.makeTransparentBackground(
                     ImageManager.makeTransparentBackground(bitmap))));
-        else {
-            int resourceId = context.getResources().getIdentifier(name.toLowerCase(), "drawable", context.getPackageName());
-            if (resourceId == 0)
-                resourceId = context.getResources().getIdentifier(name.toLowerCase() + "_", "drawable", context.getPackageName());
-            if (resourceId == 0)
-                return;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                memoryCache.put(name, ImageManager.addBorder(ImageManager.makeTransparentBackground(ImageManager.fromBlackToGray(
-                        ((BitmapDrawable) context.getResources().getDrawable(resourceId, context.getTheme())).getBitmap()))));
-            } else
-                memoryCache.put(name, ImageManager.addBorder(ImageManager.makeTransparentBackground(ImageManager.fromBlackToGray(
-                        ((BitmapDrawable) context.getResources().getDrawable(resourceId)).getBitmap()))));
-        }
     }
 
 
@@ -91,13 +78,7 @@ public class ImagesSingltone {
             iv.setImageBitmap(bm);
         } else {
             LoadImageTask lt = new LoadImageTask(context, iv, position);
-            DownloadDrawable dd = new DownloadDrawable(lt);
-            iv.setImageDrawable(dd);
-
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                lt.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            else
-                lt.execute();
+            lt.execute();
         }
     }
 

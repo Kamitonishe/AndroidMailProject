@@ -61,7 +61,6 @@ import ru.mail.android.androidmailproject.notifications.TimeNotification;
 import ru.mail.android.androidmailproject.sql.DBHelper;
 
 public class MainActivity extends AppCompatActivity {
-    public static final int NOTIFY_ID = 101;
     private DBHelper dbHelper;
     private String notificationString;
 
@@ -102,11 +101,15 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ListView lw = ((AlertDialog)dialogInterface).getListView();
                         Spinner pictureSpinner = v.findViewById(R.id.picture_spinner);
+                        Spinner notificationSpinner = v.findViewById(R.id.notifications_spinner);
                         String[] array = getResources().getStringArray(R.array.pictures_array);
+                        String[] array_not = getResources().getStringArray(R.array.notification_frequency_array);
                         setToolbarImage(array[pictureSpinner.getSelectedItemPosition()]);
                         SuperSingltone.getInstance().setOptionsDialogIsCalled(false);
                         SuperSingltone.getInstance().setOnlyFavorites(((AppCompatCheckBox)v.findViewById(R.id.onlyFavoritesCB)).isChecked());
                         SuperSingltone.getInstance().setCompareOnlyToFavorites(((AppCompatCheckBox)v.findViewById(R.id.compareOnlyToFavoritesCB)).isChecked());
+                        SuperSingltone.getInstance().setFrequency(array_not[notificationSpinner.getSelectedItemPosition()]);
+                        scheduleNotification();
                         recyclerViewSet();
                     }
                 });
@@ -128,6 +131,14 @@ public class MainActivity extends AppCompatActivity {
                 pictureSpinner.setAdapter(adapter);
                 String tmp = SuperSingltone.getInstance().getPicture();
                 pictureSpinner.setSelection(adapter.getPosition(tmp.substring(0, 1).toUpperCase() + tmp.substring(1).toLowerCase()));
+
+                final Spinner notificationSpinner = (Spinner)dialog.findViewById(R.id.notifications_spinner);
+                ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(context,
+                        R.array.notification_frequency_array, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                notificationSpinner.setAdapter(adapter1);
+                tmp = SuperSingltone.getInstance().getFrequency();
+                notificationSpinner.setSelection(adapter1.getPosition(tmp));
 
                 Button wipeData = (Button) dialog.findViewById(R.id.wipeButton);
                 wipeData.setOnClickListener(new View.OnClickListener() {
@@ -215,6 +226,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }).start();
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                db.execSQL("INSERT OR REPLACE INTO frequency(rowid, frequency) VALUES(0, \"" + SuperSingltone.getInstance().getFrequency().toLowerCase() + "\")");
+            }
+        }).start();
+
         for (final Pair<String, Integer> nameAndState : CurrenciesSingletone.getInstance().getCurrenciesNamesAndStates(false))
             if (nameAndState.second == 1)
                 new Thread(new Runnable() {
@@ -248,30 +267,11 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         new JSONTaskForNotification().execute("RUB", sdf.format(new Date()));
 
-
-
     }
 
     private class JSONTaskForNotification extends JSONTask {
         @Override
         protected void onPostExecute(Currencies[] result) {
-            if (!isCancelled()) {
-                notificationString = "";
-                Currency cur = CurrenciesSingletone.getInstance().getCurrencyRates(base);
-                Currencies new_cur = result[0];
-                for (Map.Entry<String, Float> entry : new_cur.getRates().entrySet()) {
-                    String currency = entry.getKey();
-                    if (!currency.equals(base) && CurrenciesSingletone.getInstance().isRated(currency)) {
-                        notificationString += (base + " - " + currency + ": " +
-                                (cur.getLast() == null ? "undefined" :
-                                        cur.getRates().get(new Pair<>(cur.getLast(), currency)) + " (" + cur.getLast() + ") ")
-                                + "->\n             " + entry.getValue() + "(" + new_cur.getDate() + ")\n\n");
-                    }
-                }
-            }
-
-            super.onPostExecute(result);
-
             Notification notification = new NotificationCompat.Builder(MainActivity.this)
                     .setContentTitle("Курс валют (RUB)")
                     .setSmallIcon(R.mipmap.icon)
@@ -287,12 +287,53 @@ public class MainActivity extends AppCompatActivity {
             notificationIntent.putExtra(TimeNotification.NOTIFICATION_ID, 1);
             notificationIntent.putExtra(TimeNotification.NOTIFICATION, notification);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.cancel(pendingIntent);
 
-            AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+            String frequencyString = SuperSingltone.getInstance().getFrequency().toLowerCase();
+            long frequency;
+            switch (frequencyString) {
+                case "1 day":
+                    frequency = AlarmManager.INTERVAL_DAY;
+                    break;
+                case "2 days":
+                    frequency = AlarmManager.INTERVAL_DAY * 2;
+                    break;
+                case "7 days":
+                    frequency = AlarmManager.INTERVAL_DAY * 7;
+                    break;
+                case "second":
+                    frequency = 1000;
+                    break;
+                case "never":
+                    frequency = 0;
+                    break;
+                default:
+                    frequency = 0;
+                    break;
+            }
 
-            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime() + 1000,
-                    1000, pendingIntent);
+            if (frequency != 0) {
+                notificationString = "";
+                Currency cur = CurrenciesSingletone.getInstance().getCurrencyRates(base);
+                Currencies new_cur = result[0];
+                for (Map.Entry<String, Float> entry : new_cur.getRates().entrySet()) {
+                    String currency = entry.getKey();
+                    if (!currency.equals(base) && CurrenciesSingletone.getInstance().isRated(currency)) {
+                        notificationString += (base + " - " + currency + ": " +
+                                (cur.getLast() == null ? "undefined" :
+                                        cur.getRates().get(new Pair<>(cur.getLast(), currency)) + " (" + cur.getLast() + ") ")
+                                + "->\n             " + entry.getValue() + "(" + new_cur.getDate() + ")\n\n");
+                    }
+                }
+
+                super.onPostExecute(result);
+
+
+
+                alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                        SystemClock.elapsedRealtime() + frequency,
+                        frequency, pendingIntent);
 
             /*
             Calendar calendar = Calendar.getInstance();
@@ -301,6 +342,7 @@ public class MainActivity extends AppCompatActivity {
 
             alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pendingIntent);*/
+            }
         }
     }
 

@@ -9,6 +9,7 @@ public class SuperSingltone {
     private String picture;
     private boolean optionsDialogIsCalled;
     private boolean onlyFavorites, compareOnlyToFavorites;
+    private String frequency;
 
     public SuperSingltone() {
         optionsDialogIsCalled = false;
@@ -53,5 +54,13 @@ public class SuperSingltone {
 
     public boolean isCompareOnlyToFavorites() {
         return compareOnlyToFavorites;
+    }
+
+    public String getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(String frequency) {
+        this.frequency = frequency;
     }
 }

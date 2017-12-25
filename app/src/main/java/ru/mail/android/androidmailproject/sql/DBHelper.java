@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context) {
-        super(context, "database0", null, 1);
+        super(context, "Database", null, 1);
     }
 
     @Override
@@ -23,6 +23,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "base text, date text, toCompare text, rate float);");
         db.execSQL("CREATE TABLE picture (name text);");
         db.execSQL("CREATE TABLE whichCurrencies (only integer);");
+        db.execSQL("CREATE TABLE frequency (frequency text);");
     }
 
     @Override

@@ -63,7 +63,7 @@ public class LoadImageTask extends AsyncTask<Void, Void, Bitmap> {
 
     private static String getUrlFromIndex(int index) {
         String name = CurrenciesSingletone.getInstance().getCurrenciesNames(false)[index];
-        return "icons/" + name.toLowerCase() + ".gif";
+        return "icons/" + (name.toLowerCase().equals("try") ? name.toLowerCase() + "_" : name.toLowerCase()) + ".gif";
     }
 
 

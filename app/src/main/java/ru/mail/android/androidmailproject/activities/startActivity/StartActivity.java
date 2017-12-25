@@ -87,6 +87,21 @@ public class StartActivity extends AppCompatActivity {
         service.submit(new Runnable() {
             @Override
             public void run() {
+                SQLiteDatabase db = helper.getReadableDatabase();
+                Cursor cursor = db.rawQuery("SELECT count(*) FROM frequency", null);
+                cursor.moveToFirst();
+                if (cursor.getInt(0) == 0)
+                    SuperSingltone.getInstance().setFrequency("never");
+                else {
+                    cursor = db.rawQuery("SELECT * FROM frequency", null);
+                    cursor.moveToFirst();
+                    SuperSingltone.getInstance().setFrequency(cursor.getString(0));
+                }
+            }
+        });
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
                 SQLiteDatabase db = helper.getWritableDatabase();
                 Cursor cursor = db.rawQuery("SELECT count(*) FROM whichCurrencies", null);
                 cursor.moveToFirst();

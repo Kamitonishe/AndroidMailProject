@@ -4,4 +4,12 @@
         <item> Sea </item>
         <item> Giraffe </item>
     </string-array>
+
+    <string-array name="notification_frequency_array">
+        <item> never </item>
+        <item> 1 day </item>
+        <item> 2 days </item>
+        <item> 7 days </item>
+        <item> second</item>
+    </string-array>
 </resources>
